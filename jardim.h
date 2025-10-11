@@ -3,6 +3,8 @@
 #define TRABALHO_JARDIM_H
 
 #include <iostream>
+#include <cstdlib> // biblioteca para o rand, srand
+#include <ctime> // biblioteca para o time
 using namespace std;
 
 const int dimLin = 10;

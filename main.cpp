@@ -2,6 +2,7 @@
 
 
 int main(){
+    srand(time(nullptr)); // gera semente
 
     Retangulo dimJardim;
     inicializa(dimJardim);

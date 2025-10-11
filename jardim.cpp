@@ -1,13 +1,33 @@
 #include "jardim.h"
 
+
+// gera posições aleatórias para pôr as 3 primeiras plantas sempre que se cria um jardim.
+// Às vezes imprime 2 "c" em vez de 3.
+void Planta_posRandom(Retangulo& jardim_plantas){
+
+    // 3 posições aleatórias
+    for (int i = 0; i < 3 ; ) {
+        int linha_planta = rand() % dimLin;
+        int col_planta = rand() % dimCol;
+
+        if(jardim_plantas.soloJardim[linha_planta][col_planta] == ". ") {
+            jardim_plantas.soloJardim[linha_planta][col_planta] = "c ";
+            i++;
+        }
+
+    }
+}
+
 void inicializa(Retangulo& x){
 
     // ainda ta sem plantas, ferramentas, etc ... inicializa vazio
     for (int i = 0; i < dimLin ; i++) {
         for (int j = 0 ; j < dimCol ; j++) {
-            x.soloJardim[i][j] = ". ";
+                x.soloJardim[i][j] = ". ";
         }
     }
+
+    Planta_posRandom(x);
 }
 
 void MostraJardim(const Retangulo& z){
@@ -24,7 +44,7 @@ void MostraJardim(const Retangulo& z){
 
         // para não imprimir na 1ª linha os pontos
         if(regua_x != 0) {
-            for (int i = dimCol; i > 0; i--) {
+            for (int i = dimCol-1; i >= 0; i--) {
                 cout << z.soloJardim[regua_x][i];
             }
         }
