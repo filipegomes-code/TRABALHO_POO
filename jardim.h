@@ -10,9 +10,15 @@ using namespace std;
 const int dimLin = 10;
 const int dimCol = 15;
 
+struct bloco{
+    string planta;
+    int agua;
+    int nutri;
+    bool temJard;
+};
 
 struct Retangulo {
-    string soloJardim[dimLin][dimCol];
+    bloco soloJardim[dimLin][dimCol];
 };
 
 

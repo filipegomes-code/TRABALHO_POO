@@ -1,4 +1,5 @@
 #include "jardim.h"
+#include "Settings.h"
 
 
 // gera posições aleatórias para pôr as 3 primeiras plantas sempre que se cria um jardim.
@@ -10,8 +11,8 @@ void Planta_posRandom(Retangulo& jardim_plantas){
         int linha_planta = rand() % dimLin;
         int col_planta = rand() % dimCol;
 
-        if(jardim_plantas.soloJardim[linha_planta][col_planta] == ". ") {
-            jardim_plantas.soloJardim[linha_planta][col_planta] = "c ";
+        if(jardim_plantas.soloJardim[linha_planta][col_planta].planta == ". ") {
+            jardim_plantas.soloJardim[linha_planta][col_planta].planta = "c ";
             i++;
         }
 
@@ -23,7 +24,10 @@ void inicializa(Retangulo& x){
     // ainda ta sem plantas, ferramentas, etc ... inicializa vazio
     for (int i = 0; i < dimLin ; i++) {
         for (int j = 0 ; j < dimCol ; j++) {
-                x.soloJardim[i][j] = ". ";
+                x.soloJardim[i][j].planta = ". ";
+                x.soloJardim[i][j].agua = rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1)+ Settings::Jardim::agua_min; // rand() % -> quantidade de numeros possiveis + -> limite minimo
+                x.soloJardim[i][j].nutri = rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1)+ Settings::Jardim::nutrientes_min; // 40 - 50
+                x.soloJardim[i][j].temJard = false;
         }
     }
 
@@ -45,12 +49,11 @@ void MostraJardim(const Retangulo& z){
         // para não imprimir na 1ª linha os pontos
         if(regua_x != 0) {
             for (int i = dimCol-1; i >= 0; i--) {
-                cout << z.soloJardim[regua_x][i];
+                cout << z.soloJardim[regua_x][i].planta;
             }
         }
 
         cout << endl;
     }
-
 }
 
