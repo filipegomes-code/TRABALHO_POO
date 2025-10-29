@@ -2,8 +2,9 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
-#include "jardim.h"
-#include "Comandos.h"
+#include "Jardim/jardim.h"
+#include "Comandos/Comandos.h"
+#include "Plantas/Roseira/Roseira.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ int main(){
 
         if (!getline(cin, comando)) break; // erro ou EOF
 
-        istringstream one(comando);
+        istringstream one(comando); // transforma essa linha e separa pelos espaços
         if (!Executa_Comandos(one, mapa)) break; // 'fim' devolve false
     }
 

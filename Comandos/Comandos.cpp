@@ -3,6 +3,9 @@
 //
 
 #include "Comandos.h"
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 bool Executa_Comandos(istream& msg, Retangulo& x){
     string comando;
@@ -11,8 +14,8 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
 
     bool temJardim = (x.solo != nullptr); // false se null, true se existir jardim
     // só aceitamos 'jardim <L> <C>' ou 'executa <ficheiro>'
-    if (!temJardim && comando != std::string(cmd::JARDIM) && comando != std::string(cmd::EXECUTA)) {
-        std::cout << "erro: o primeiro comando deve ser 'jardim <L> <C>' ou 'executa <ficheiro>'\n";
+    if (!temJardim && comando != cmd::JARDIM && comando != cmd::EXECUTA) {
+        cout << "erro: o primeiro comando deve ser 'jardim <L> <C>' ou 'executa <ficheiro>'\n";
         return true;
     }
 
@@ -21,18 +24,18 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         x.solo = nullptr;
         return false;
     }
-    else if(comando == string(cmd::JARDIM)) {
+    else if(comando == cmd::JARDIM) {
         if (temJardim) {
-            std::cout << "Já existe 1 jardim\n";
+            cout << "Já existe 1 jardim\n";
             return true;
         }
         int L=0, C=0; // inicializa valores com 0
         if (!(msg >> L >> C)) { // lê aqui os valores
-            std::cout << "erro: uso correto: jardim <L> <C>\n";
+            cout << "erro: uso correto: jardim <L> <C>\n";
             return true;
         }
         if (L < 1 || L > 26 || C < 1 || C > 26) {
-            std::cout << "linhas e colunas têm de estar entre 1 e 26\n";
+            cout << "linhas e colunas têm de estar entre 1 e 26\n";
             return true;
         }
         CriaJardim(L, C, x);
@@ -56,6 +59,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         cout << "validado\n";
         return true;
     }
+
     else{
         cout << "comando invalido, digita outro\n";
         return true;

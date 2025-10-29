@@ -7,7 +7,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(.)
 
 add_executable(Trabalho
-        jardim.cpp
+        Jardim/jardim.cpp
         main.cpp
-        Comandos.cpp
+        Comandos/Comandos.cpp
+        Plantas/Planta.cpp
+        Plantas/Cacto/Cacto.cpp
+        Plantas/Roseira/Roseira.cpp
+        Plantas/ErvaDaninha/ErvaDaninha.cpp
 )

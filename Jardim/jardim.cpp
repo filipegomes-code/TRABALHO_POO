@@ -1,5 +1,5 @@
 #include "jardim.h"
-#include "Comandos.h"
+#include "Comandos/Comandos.h"
 #include "Settings.h"
 #include <iostream>
 #include <cstdlib>
@@ -14,7 +14,7 @@ void Planta_posRandom(Retangulo& jardim_plantas){
         int pos_random = rand() % jardim_plantas.tam_jardim; // gera pos de 0-dimLin*dimCol
         // se estiver vazio, insere planta
         if(jardim_plantas.solo[pos_random].planta == cmd::VAZIO){
-            jardim_plantas.solo[pos_random].planta = cmd::PLANTA;
+            jardim_plantas.solo[pos_random].planta = cmd::PLANTA_TESTE;
             i++;
         }
 
