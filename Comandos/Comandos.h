@@ -12,7 +12,6 @@ namespace cmd{
     constexpr std::string_view FIM = "fim";
     constexpr std::string_view JARDIM = "jardim";
     constexpr std::string_view EXECUTA = "executa";
-    constexpr std::string_view VAZIO = "  ";
     constexpr std::string_view AVANCA = "avanca";
     constexpr std::string_view LPLANTAS = "lplantas"; // tipo planta, pos , valor propriedades internas, propriedades solo
     constexpr std::string_view LPLANTA = "lplanta"; // propriedas da planta numa certa posicao
