@@ -5,7 +5,7 @@
 #ifndef TRABALHO_PLANTA_H
 #define TRABALHO_PLANTA_H
 
-#include "Jardim/jardim.h"
+#include "Jardim/Jardim.h"
 #include <string>
 
 class Planta{

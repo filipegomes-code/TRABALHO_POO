@@ -1,0 +1,46 @@
+# Ficheiros e pastas do CLion / IntelliJ
+# Contém configurações pessoais do IDE, histórico local, etc.
+.idea/
+*.iml
+
+# Ficheiros de Build do CMake
+# O CLion cria estas pastas para guardar os ficheiros compilados
+cmake-build-*/
+cmake-build-debug/
+cmake-build-release/
+
+# Ficheiros gerados pelo CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Binários e Artefactos de Compilação
+# Ficheiros executáveis
+*.exe
+*.out
+*.app
+
+# Bibliotecas (libraries)
+*.a
+*.lib
+*.so
+*.dll
+
+# Ficheiros objeto e de dependência
+*.o
+*.obj
+*.d
+*.gch # Precompiled headers
+
+# Ficheiros de Log
+*.log
+
+# Ficheiros de Sistema Operativo (Opcional, mas boa prática)
+.DS_Store
+Thumbs.db
+
+# Ficheiros de backup de editores
+*~
+*.swp

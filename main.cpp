@@ -2,7 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
-#include "Jardim/jardim.h"
+#include "Jardim/Jardim.h"
 #include "Comandos/Comandos.h"
 #include "Plantas/Roseira/Roseira.h"
 

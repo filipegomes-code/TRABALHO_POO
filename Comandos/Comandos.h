@@ -1,12 +1,7 @@
-//
-// Created by Filipe Gomes on 20/10/2025.
-//
 #ifndef TRABALHO_COMANDOS_H
 #define TRABALHO_COMANDOS_H
 
-#include "Jardim/jardim.h"
-
-using namespace std;
+#include "Jardim/Jardim.h"
 
 namespace cmd{
     constexpr std::string_view FIM = "fim";
@@ -20,11 +15,11 @@ namespace cmd{
     constexpr std::string_view LFERR = "lferr"; // ferr que jardineiro transporta + a da mão. (detalhes + identificação)
 
     // COMANDOS QUE ALTERAM O JARDIM -> fazendo com que seja preciso a impressao dele again.
-    constexpr std::string_view COLHE = "colhe <l><c>";
-    constexpr std::string_view PLANTA = "planta <l><c><tipo>";
+    constexpr std::string_view COLHE = "colhe";
+    constexpr std::string_view PLANTA = "planta";
     constexpr std::string_view LARGA = "larga"; // se tiver ferr na mao, larga e junta às outras
-    constexpr std::string_view PEGA = "pega <n>"; // coloca na mao uma ferr com o numero de serie n, se existir
-    constexpr std::string_view COMPRA = "compra <c>"; // compra ferr de tipo g,a,t,z
+    constexpr std::string_view PEGA = "pega"; // coloca na mao uma ferr com o numero de serie n, se existir
+    constexpr std::string_view COMPRA = "compra"; // compra ferr de tipo g,a,t,z
 
     // MOVIMENTO JARDINEIRO
     namespace mov {
@@ -34,12 +29,12 @@ namespace cmd{
         constexpr std::string_view BAIXO = "b";
     }
 
-    constexpr std::string_view ENTRA = "entra <l><c>"; // se já estiver no jardim, teletransportasse para essa pos
+    constexpr std::string_view ENTRA = "entra"; // se já estiver no jardim, teletransportasse para essa pos
     constexpr std::string_view SAI = "sai"; // sai jardim
 }
 
 // PROTOTIPO
-bool Executa_Comandos(istream& msg, Retangulo& x);
+bool Executa_Comandos(std::istream& msg, Retangulo& x);
 
 
 #endif //TRABALHO_COMANDOS_H

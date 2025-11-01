@@ -14,4 +14,10 @@ add_executable(Trabalho
         Plantas/Cacto/Cacto.cpp
         Plantas/Roseira/Roseira.cpp
         Plantas/ErvaDaninha/ErvaDaninha.cpp
-)
+        Plantas/Exotica/Exotica.cpp
+        Jardineiro/Jardineiro.cpp
+        Ferramentas/Ferramenta.cpp
+        Ferramentas/Regador/Regador.cpp
+        Ferramentas/Tesoura/Tesoura.cpp
+        Ferramentas/Adubo/Adubo.cpp
+        Ferramentas/FerramentaZ/FerramentaZ.cpp)

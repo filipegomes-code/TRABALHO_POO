@@ -2,7 +2,7 @@
 // Created by Filipe Gomes on 29/10/2025.
 //
 #include "ErvaDaninha.h"
-#include "Settings.h"
+#include "../../Settings.h"
 
 // ERVA DANINHA
 ErvaDaninha::ErvaDaninha() : Planta(Settings::ErvaDaninha::inicial_nutrientes, Settings::ErvaDaninha::inicial_agua, "Feia")

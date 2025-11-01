@@ -1,6 +1,6 @@
-#include "jardim.h"
+#include "Jardim.h"
 #include "Comandos/Comandos.h"
-#include "Settings.h"
+#include "../Settings.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
