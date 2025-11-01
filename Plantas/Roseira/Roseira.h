@@ -12,8 +12,9 @@ public:
     Roseira();
     ~Roseira() override; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
 
+    char Simbolo() const override;
     void Absorve() override;
-    void Morre() override;
+    void CheckMorte() override;
 
 };
 

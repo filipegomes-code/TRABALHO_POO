@@ -8,8 +8,7 @@ class Planta;
 
 // cada pos(bloco) do jardim.
 struct bloco{
-    Planta* p = nullptr; // mudar p para planta, dps de eliminar a string planta
-    std::string planta; // trocar isto por Planta* , ele quer relaçao jardim->planta para meta 1
+    Planta* planta = nullptr;
     int agua;
     int nutri;
     bool temJard;
@@ -20,9 +19,8 @@ struct Retangulo {
     int dimLin;
     int dimCol;
     int tam_jardim;
-    bloco* solo; // por aqui dentro [] o tamanho dinamica
+    bloco* solo;
 };
-
 
 // PROTOTIPOS
 void inicializa(Retangulo& x);

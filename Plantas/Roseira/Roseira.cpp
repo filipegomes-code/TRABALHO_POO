@@ -17,9 +17,13 @@ void Roseira::Absorve() {
     // absorve 5 agua e 8 nutri do solo se existir
 }
 
-void Roseira::Morre(){
+void Roseira::CheckMorte(){
     // agua == 0 || nutri == 0 || nutri == 200 || todas pos vizinhas tiver planta
     // etc..
+}
+
+char Roseira::Simbolo() const {
+    return 'r';
 }
 
 // fazer funcao para retornar char 'r' -> representa Roseira

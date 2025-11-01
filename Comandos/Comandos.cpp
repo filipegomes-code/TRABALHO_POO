@@ -59,12 +59,71 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         cout << "validado\n";
         return true;
     }
-
+    else if(comando == cmd::LPLANTAS){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::LPLANTA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::LAREA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::LSOLO){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::LFERR){
+        cout << "validado\n";
+        return true;
+    }else if(comando == cmd::COLHE){
+        cout << "validado\n";
+        return true;
+    }else if(comando == cmd::PLANTA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::LARGA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::PEGA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::COMPRA){
+        cout << "validado\n";
+        return true;
+    }else if(comando == cmd::mov::ESQ){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::mov::DIR){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::mov::CIMA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::mov::BAIXO){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::ENTRA){
+        cout << "validado\n";
+        return true;
+    }
+    else if(comando == cmd::SAI){
+        cout << "validado\n";
+        return true;
+    }
     else{
         cout << "comando invalido, digita outro\n";
         return true;
     }
-
 }
 
 

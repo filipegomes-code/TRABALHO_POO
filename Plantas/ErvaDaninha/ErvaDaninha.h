@@ -12,8 +12,9 @@ public:
     ErvaDaninha();
     ~ErvaDaninha() override;
 
+    char Simbolo()const override;
     void Absorve() override;
-    void Morre() override;
+    void CheckMorte() override;
 
 };
 

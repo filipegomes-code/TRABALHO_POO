@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include "Plantas/Roseira/Roseira.h"
+#include "Plantas/Cacto/Cacto.h"
+#include "Plantas/ErvaDaninha/ErvaDaninha.h"
 
 using namespace std;
 
@@ -13,19 +16,21 @@ void Planta_posRandom(Retangulo& jardim_plantas){
     for (int i = 0; i < 3 ; ) {
         int pos_random = rand() % jardim_plantas.tam_jardim; // gera pos de 0-dimLin*dimCol
         // se estiver vazio, insere planta
-        if(jardim_plantas.solo[pos_random].planta == cmd::VAZIO){
-            jardim_plantas.solo[pos_random].planta = cmd::PLANTA_TESTE;
+        if(jardim_plantas.solo[pos_random].planta == nullptr){
+            // futuramente fazer um if ou switch com rand para escolher roseira, cacto ou outros..
+            jardim_plantas.solo[pos_random].planta = new Roseira();
             i++;
         }
 
     }
 }
+
 // apenas atribui a cada bloco(pos. jardim) as caracteristicas
 void inicializa(Retangulo& x){
 
     // ainda ta sem plantas, ferramentas, etc ... inicializa vazio
     for (int i = 0; i < x.tam_jardim; i++) {
-            x.solo[i].planta = "  ";
+            // x.solo[i].planta; planta já é null nem é preciso inicializar pq já está
             x.solo[i].agua = rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1) +
                              Settings::Jardim::agua_min; // rand() % -> quantidade de numeros possiveis + -> limite minimo
             x.solo[i].nutri = rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1) +
@@ -47,7 +52,10 @@ void MostraJardim(Retangulo& z){
     for (int regua_lin = 0; regua_lin < z.dimLin; regua_lin++) {
         cout << char('A'+ regua_lin) << ' ';
         for (int j = 0; j < z.dimCol ; j++) {
-            cout << z.solo[regua_lin * z.dimCol + j].planta;
+            if(z.solo[regua_lin * z.dimCol + j].planta != nullptr ) {
+                cout << z.solo[regua_lin * z.dimCol + j].planta->Simbolo() << ' ';
+            }else
+                cout << "  ";
         }
         cout << endl;
     }

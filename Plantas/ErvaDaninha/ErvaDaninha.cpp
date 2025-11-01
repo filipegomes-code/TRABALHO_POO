@@ -16,10 +16,14 @@ void ErvaDaninha::Absorve() {
     // 5 unidades nutri
 }
 
-void ErvaDaninha::Morre(){
+void ErvaDaninha::CheckMorte(){
     // agua solo > 100 por 3 instantes seguidos
     // qtd nutri == 0 por 3 instantes seguidos
     // etc..
+}
+
+char ErvaDaninha::Simbolo() const {
+    return 'e';
 }
 
 // fazer funcao para retornar char 'e' -> representa ervaDaninha

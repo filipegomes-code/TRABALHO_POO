@@ -12,8 +12,9 @@ public:
     Cacto();
     ~Cacto() override;
 
+    char Simbolo()const override;
     void Absorve() override;
-    void Morre() override;
+    void CheckMorte() override;
 
 
 };

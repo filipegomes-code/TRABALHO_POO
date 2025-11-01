@@ -15,10 +15,14 @@ void Cacto::Absorve() {
     // 5 unidades nutri
 }
 
-void Cacto::Morre(){
+void Cacto::CheckMorte(){
     // agua solo > 100 por 3 instantes seguidos
     // qtd nutri == 0 por 3 instantes seguidos
     // etc..
+}
+
+char Cacto::Simbolo() const {
+    return 'c';
 }
 
 // fazer funcao para retornar char 'c' -> representa cacto

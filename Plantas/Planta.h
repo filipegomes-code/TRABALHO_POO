@@ -21,10 +21,13 @@ public:
 
     // virtual não puras
     virtual void get_valores();
+    // futuramente ter uma funcao que encapsule cada comportamente da planta
 
     //virtual puras -> fazem coisas especificas para cada classe
+    virtual char Simbolo()const=0;
     virtual void Absorve() = 0;
-    virtual void Morre() = 0;
+    virtual void CheckMorte() = 0;
+
 
 };
 
