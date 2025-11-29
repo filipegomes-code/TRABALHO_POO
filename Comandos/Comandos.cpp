@@ -1,4 +1,5 @@
 #include "Comandos.h"
+#include "Jardim/Jardim.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -15,7 +16,7 @@ using namespace std;
 bool strParaInt(const string& s, int& out) {
     try {
         size_t pos;
-        out = stoi(s, &pos);
+        out = stoi(s, &pos); // este &pos guarda a posiçao do 1 caractere que n é um numero.
         return pos == s.length();
     } catch (...) {
         return false;
@@ -45,8 +46,8 @@ bool strParaCoords(const string& s, int& l, int& c) {
  * @brief Verifica se as coordenadas (l, c) estão dentro dos limites do jardim.
  * @return true se válidas, false caso contrário.
  */
-bool coordsValidas(int l, int c, const Retangulo& x) {
-    return (l >= 0 && l < x.dimLin && c >= 0 && c < x.dimCol);
+bool coordsValidas(int l, int c, const Jardim& x) {
+    return (l >= 0 && l < x.getDimLin() && c >= 0 && c < x.getDimCol());
 }
 
 /**
@@ -62,17 +63,17 @@ bool verificaLixo(istream& msg, const string& comando) {
     return false;
 }
 
-bool Executa_Comandos(istream& msg, Retangulo& x){
+bool Executa_Comandos(istream& msg, Jardim& x){
     string comando;
 
     if(!(msg >> comando)) return true; // se linha vazia ou EOF pa files
 
-    bool temJardim = (x.solo != nullptr); // false se null, true se existir jardim
+    bool temJardim = x.existe(); // false se null, true se existir jardim
     // só aceitamos 'jardim <L> <C>' ou 'executa <ficheiro>'
     if (comando == cmd::JARDIM) {
         if (temJardim) {
             cout << "Erro: já existe um jardim criado." << endl;
-            return true;;
+            return true;
         }
         string p1, p2;
         int L, C;
@@ -80,7 +81,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
             cout << "Erro: Sintaxe incorreta. Uso: jardim <L> <C>" << endl;
             return true;
         }
-        if (!strParaInt(p1, L) || !strParaInt(p2, C)) {
+        if (!strParaInt(p1, L) || !strParaInt(p2, C)) { // se conseguir converter de string para int, é pq user realmente digitou numero.
             cout << "Erro: Dimensoes devem ser numeros inteiros." << endl;
             return true;
         }
@@ -92,7 +93,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
             return true;
         }
         cout << "[META 1] Comando 'jardim " << L << " " << C << "' validado." << endl;
-        CriaJardim(L, C, x);
+        x.cria(L, C);
         return true;
     } else if (comando == cmd::EXECUTA) {
         string file;
@@ -127,8 +128,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
             return true;
         }
         cout << "[META 1] Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
-        delete[] x.solo;
-        x.solo = nullptr;
+        x.destroi(); // -> deleta os blocos 1º dps o jardim todo
         return false;
     }
 

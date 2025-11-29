@@ -33,8 +33,7 @@ namespace cmd{
     constexpr std::string_view SAI = "sai"; // sai jardim
 }
 
-// PROTOTIPO
-bool Executa_Comandos(std::istream& msg, Retangulo& x);
-
+//Prototipos
+bool Executa_Comandos(std::istream& msg, Jardim& x);
 
 #endif //TRABALHO_COMANDOS_H
