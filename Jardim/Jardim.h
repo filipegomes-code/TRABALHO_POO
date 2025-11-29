@@ -2,6 +2,7 @@
 #ifndef TRABALHO_JARDIM_H
 #define TRABALHO_JARDIM_H
 
+#include "Jardineiro/Jardineiro.h"
 #include <string>
 
 class Planta;
@@ -37,6 +38,7 @@ private:
     int dimCol;
     int tamJardim;
     Bloco* solo;
+    Jardineiro jard;
 
     int index(int l, int c)const; // converter l c para indice no array
     void inicializa();
@@ -57,6 +59,18 @@ public:
 
     Bloco& getBloco(int l, int c);
     const Bloco& getBloco(int l, int c) const;
+
+    // operaçoes do jardineiro que o jardim controla
+    bool JardineiroDentro() const { return jard.getEstaNoJardim(); }
+    const Jardineiro& getJardineiro() const { return jard; }
+
+    bool entraJardineiro(int l, int c);
+    bool saiJardineiro();
+    bool moveJardineiro(char dir);   // 'e','d','c','b'
+
+    //  Operações futuras sobre plantas
+    bool plantar(int l, int c, char tipo); // ainda por implementar
+    bool colher(int l, int c);             // ainda por implementar
 
     void mostra() const;
 

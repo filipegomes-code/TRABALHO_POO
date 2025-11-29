@@ -11,7 +11,7 @@ class Adubo : public Ferramenta {
 public:
     Adubo();
     bool aplicaEfeito(Jardim* j, int l, int c) override;
-    std::string getTipo() const override;
+    char getTipo() const override {return 'a';}
     std::string getDescricao() const override;
 private:
     int capacidadeAdubo;

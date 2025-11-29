@@ -4,24 +4,34 @@
 
 #ifndef TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
+
 #include <vector>
 
-#include "Ferramentas/Ferramenta.h"
-
+class Ferramenta;
 
 class Jardineiro {
+private:
+    int posLin = -1, posCol=-1;
+    bool estaNoJardim = false;
+    std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
+    Ferramenta* ferramentaAtiva = nullptr; // ferramenta na mão do jardineiro
+
+    // Contadores de ações por instante
+    int movimentosRestantes = 0;
+    int plantacoesRestantes = 0;
+    int colheitasRestantes = 0;
+    int entradasSaidasRestantes = 0;
+
 public:
     Jardineiro();
     ~Jardineiro();
 
     void limparInventario();
 
-    void move(Jardim* j, char dir);
+    static char getSimbolo() {return '*';}
+    void move(char dir);
     void sair();
-    void entrar(Jardim* j, int l, int c);
-
-    void colherPlanta(Jardim* j, int l, int c);
-    void plantarPlanta(Jardim* j, int l, int c);
+    void entrar(int l, int c);
 
     void pegarFerramenta(int numSerie);
     void largarFerramenta();
@@ -32,6 +42,7 @@ public:
 
     // aquando da mudança de instante, reinicia os contadores de ações
     void reiniciaContadores();
+    bool podeMover() const;
 
     // devolve se o jardineiro está ou não no jardim
     bool getEstaNoJardim() const { return estaNoJardim; }
@@ -42,17 +53,6 @@ public:
 
     // lista as ferramentas no inventario (vetor) do jardineiro
     void listarFerramentas() const;
-private:
-    int posLin, posCol;
-    bool estaNoJardim;
-    std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
-    Ferramenta* ferramentaAtiva; // ferramenta na mão do jardineiro
-
-    // Contadores de ações por instante
-    int movimentosRestantes;
-    int plantacoesRestantes;
-    int colheitasRestantes;
-    int entradasSaidasRestantes;
 };
 
 

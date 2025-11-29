@@ -12,7 +12,7 @@ public:
     FerramentaZ();
 
     bool aplicaEfeito(Jardim *j, int l, int c) override;
-    std::string getTipo() const override;
+    char getTipo() const override {return 'z';}
     std::string getDescricao() const override;
 private:
     int cargasRestantes;

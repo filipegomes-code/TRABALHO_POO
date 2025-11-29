@@ -2,6 +2,7 @@
 # Contém configurações pessoais do IDE, histórico local, etc.
 .idea/
 *.iml
+*.pdf
 
 # Ficheiros de Build do CMake
 # O CLion cria estas pastas para guardar os ficheiros compilados
@@ -44,3 +45,4 @@ Thumbs.db
 # Ficheiros de backup de editores
 *~
 *.swp
+

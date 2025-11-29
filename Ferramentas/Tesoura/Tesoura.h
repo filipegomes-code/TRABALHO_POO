@@ -11,7 +11,7 @@ class Tesoura : public Ferramenta {
 public:
     Tesoura();
     bool aplicaEfeito(Jardim *j, int l, int c) override;
-    std::string getTipo() const override;
+    char getTipo() const override {return 't';}
     std::string getDescricao() const override;
 };
 

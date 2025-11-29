@@ -3,7 +3,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include "Ferramentas/Adubo/Adubo.h"
+#include "Ferramentas/Regador/Regador.h"
+#include "Ferramentas/Tesoura/Tesoura.h"
 #include "Plantas/Roseira/Roseira.h"
+#include "Plantas/Cacto/Cacto.h"
+#include "Plantas/ErvaDaninha/ErvaDaninha.h"
 
 using namespace std;
 
@@ -151,8 +156,14 @@ void Jardim::plantaPosRandom() {
         int pos = rand() % tamJardim;
 
         if (solo[pos].getPlanta() == nullptr) {
+            int numRand = rand() % 3 + 1;
             // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
-            solo[pos].setPlanta(new Roseira());
+            switch (numRand) {
+                case 1: solo[pos].setPlanta(new Roseira()); break;
+                case 2: solo[pos].setPlanta(new Cacto()); break;
+                case 3: solo[pos].setPlanta(new ErvaDaninha()); break;
+                default: solo[pos].setPlanta(new Roseira()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
+            }
             ++i;
         }
     }
@@ -169,11 +180,31 @@ void Jardim::mostra()const{
     for (int regua_lin = 0; regua_lin < dimLin; regua_lin++) {
         cout << char('A'+ regua_lin) << ' ';
         for (int j = 0; j < dimCol ; j++) {
-            if(solo[regua_lin * dimCol + j].getPlanta() != nullptr ) {
+            // Ordem das ferramentas
+            if(jard.getEstaNoJardim() &&  jard.getPosLin() == regua_lin && jard.getPosCol() == j){
+                cout << jard.getSimbolo() << ' ';
+            }
+            else if(solo[regua_lin * dimCol + j].getPlanta() != nullptr ) {
                 cout << solo[regua_lin * dimCol + j].getPlanta()->Simbolo() << ' ';
-            }else
+            }else if(solo[regua_lin * dimCol + j].getFerramenta() != nullptr) {
+                cout << solo[regua_lin * dimCol + j].getFerramenta()->getTipo() << ' ';
+            }
+            else
                 cout << "  ";
         }
         cout << endl;
     }
 }
+
+bool Jardim::entraJardineiro(int l, int c) {
+    jard.entrar(l,c);
+    return true;
+}
+
+bool Jardim::saiJardineiro() {
+    if(jard.getEstaNoJardim()){
+        jard.sair();
+    }
+    return true;
+}
+

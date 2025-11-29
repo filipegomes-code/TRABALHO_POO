@@ -14,6 +14,15 @@ void Jardineiro::limparInventario() {
 }
 
 void Jardineiro::sair() {
+    posLin = -1;
+    posCol = -1;
+    estaNoJardim = false;
+}
+
+void Jardineiro::entrar(int l, int c) {
+    posLin = l;
+    posCol = c;
+    estaNoJardim = true;
 }
 
 void Jardineiro::pegarFerramenta(int numSerie) {

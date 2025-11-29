@@ -11,7 +11,7 @@ class Regador : public Ferramenta {
 public:
     Regador();
     bool aplicaEfeito(Jardim *j, int l, int c) override;
-    std::string getTipo() const override;
+    char getTipo() const override {return 'g';}
     std::string getDescricao() const override;
 private:
     int capacidadeAgua;

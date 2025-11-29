@@ -341,7 +341,10 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "entra <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'entra " << p1 << "' validado." << endl;
+        if(x.entraJardineiro(l,c)){
+           cout << "Jardineiro entrou no Jardim" << endl;
+           x.mostra();
+        }
         return true;
     } else if (comando == cmd::SAI) {
         if (verificaLixo(msg, "sai")) {
