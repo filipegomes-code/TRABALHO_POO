@@ -4,6 +4,8 @@
 
 #include "Jardineiro.h"
 
+int Jardineiro::compararInstante = 0;
+
 Jardineiro::Jardineiro() {
 }
 
@@ -13,16 +15,36 @@ Jardineiro::~Jardineiro() {
 void Jardineiro::limparInventario() {
 }
 
-void Jardineiro::sair() {
-    posLin = -1;
-    posCol = -1;
-    estaNoJardim = false;
+bool Jardineiro::sair() {
+    if(entradasSaidasRestantes > 0) {
+        posLin = -1;
+        posCol = -1;
+        estaNoJardim = false;
+        return true;
+    }
+    return false;
 }
 
-void Jardineiro::entrar(int l, int c) {
-    posLin = l;
-    posCol = c;
-    estaNoJardim = true;
+bool Jardineiro::entrar(int l, int c) {
+    if(entradasSaidasRestantes > 0) {
+        posLin = l;
+        posCol = c;
+        estaNoJardim = true;
+        entradasSaidasRestantes--;
+        return true;
+    }
+    return false;
+}
+
+// se esgotar o numero de movimentos possiveis retorna false, senao true
+bool Jardineiro::atualizaPos(int l, int c) {
+    if(movimentosRestantes > 0) {
+        posLin = l;
+        posCol = c;
+        movimentosRestantes--;
+        return true;
+    }
+    return false;
 }
 
 void Jardineiro::pegarFerramenta(int numSerie) {
@@ -38,6 +60,10 @@ void Jardineiro::apanharFerramenta(Ferramenta *f) {
 }
 
 void Jardineiro::reiniciaContadores() {
+    movimentosRestantes = Settings::Jardineiro::max_movimentos;
+    plantacoesRestantes = Settings::Jardineiro::max_plantacoes;
+    colheitasRestantes = Settings::Jardineiro::max_colheitas;
+    entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 }
 
 void Jardineiro::listarFerramentas() const {

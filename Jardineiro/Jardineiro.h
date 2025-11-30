@@ -6,21 +6,23 @@
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
 
 #include <vector>
+#include "Settings.h"
 
 class Ferramenta;
 
 class Jardineiro {
 private:
     int posLin = -1, posCol=-1;
+    static int compararInstante;
     bool estaNoJardim = false;
     std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
     Ferramenta* ferramentaAtiva = nullptr; // ferramenta na mão do jardineiro
 
     // Contadores de ações por instante
-    int movimentosRestantes = 0;
-    int plantacoesRestantes = 0;
-    int colheitasRestantes = 0;
-    int entradasSaidasRestantes = 0;
+    int movimentosRestantes = Settings::Jardineiro::max_movimentos;
+    int plantacoesRestantes = Settings::Jardineiro::max_plantacoes;
+    int colheitasRestantes = Settings::Jardineiro::max_colheitas;
+    int entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 
 public:
     Jardineiro();
@@ -30,8 +32,10 @@ public:
 
     static char getSimbolo() {return '*';}
     void move(char dir);
-    void sair();
-    void entrar(int l, int c);
+    bool sair();
+    bool entrar(int l, int c);
+    bool podeMover() const {return movimentosRestantes > 0;}
+    bool atualizaPos(int l, int c);
 
     void pegarFerramenta(int numSerie);
     void largarFerramenta();
@@ -42,7 +46,6 @@ public:
 
     // aquando da mudança de instante, reinicia os contadores de ações
     void reiniciaContadores();
-    bool podeMover() const;
 
     // devolve se o jardineiro está ou não no jardim
     bool getEstaNoJardim() const { return estaNoJardim; }

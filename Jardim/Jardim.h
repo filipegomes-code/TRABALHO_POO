@@ -24,6 +24,7 @@ public:
     void setPlanta(Planta* p);
     Ferramenta* getFerramenta() const;
     void setFerramenta(Ferramenta* f);
+    Jardineiro* getJardineiro() const;
     int getAgua()const;
     void setAgua(int n);
     int getNutri()const;
@@ -34,6 +35,7 @@ public:
 // estrutura para o jardim como um todo.
 class Jardim {
 private:
+    static int instantes;
     int dimLin;
     int dimCol;
     int tamJardim;
@@ -66,7 +68,8 @@ public:
 
     bool entraJardineiro(int l, int c);
     bool saiJardineiro();
-    bool moveJardineiro(char dir);   // 'e','d','c','b'
+    bool moveJardineiro(std::string dir);   // 'e','d','c','b'
+    bool avancar(int n);
 
     //  Operações futuras sobre plantas
     bool plantar(int l, int c, char tipo); // ainda por implementar

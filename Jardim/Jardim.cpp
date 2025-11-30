@@ -1,8 +1,10 @@
-#include "Jardim.h"
-#include "../Settings.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+
+#include "Jardim.h"
+#include "../Settings.h"
+#include "Comandos/Comandos.h"
 #include "Ferramentas/Adubo/Adubo.h"
 #include "Ferramentas/Regador/Regador.h"
 #include "Ferramentas/Tesoura/Tesoura.h"
@@ -52,6 +54,8 @@ void Bloco::setNutri(int n) {
                 //JARDIM//
 ///////////////            ///////////////
 
+int Jardim::instantes = 0;
+
 Jardim::Jardim()
         : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {}
 
@@ -95,6 +99,7 @@ void Jardim::destroi() {
 
     // libertar plantas e ferramentas
     for (int i = 0; i < tamJardim; ++i) {
+
         if (solo[i].getPlanta() != nullptr) {
             delete solo[i].getPlanta();
             solo[i].setPlanta(nullptr);
@@ -195,16 +200,61 @@ void Jardim::mostra()const{
         cout << endl;
     }
 }
-
+// jardineiro atualiza apenas posicoes na sua classe, usado na funcao Jardim::mostra
+// para mostrar a posicao onde se encontra
 bool Jardim::entraJardineiro(int l, int c) {
-    jard.entrar(l,c);
-    return true;
+    return jard.entrar(l,c);
 }
 
 bool Jardim::saiJardineiro() {
     if(jard.getEstaNoJardim()){
-        jard.sair();
+        return jard.sair();
     }
+    return false;
+}
+
+bool Jardim::moveJardineiro(string dir){
+    if(jard.getEstaNoJardim()) {
+        char mov = dir[0];
+        int lin = jard.getPosLin();
+        int col = jard.getPosCol();
+
+        switch (mov) {
+            case 'e':
+                col--;
+                break;
+            case 'd':
+                col++;
+                break;
+            case 'c':
+                lin--;
+                break;
+            case 'b':
+                lin++;
+                break;
+            default: break;
+        }
+        // Wrap horizontal
+        if(lin < 0) lin = dimLin-1;
+        else if (lin >= dimLin) lin = 0;
+
+        // Wrap vertical
+        if(col < 0) col = dimCol-1;
+        else if(col >= dimCol) col = 0;
+
+        return jard.atualizaPos(lin, col);
+    }
+    return false;
+}
+
+bool Jardim::avancar(int n) {
+    instantes += n;
+    jard.reiniciaContadores();
     return true;
 }
+
+
+
+
+
 

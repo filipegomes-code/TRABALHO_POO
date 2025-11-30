@@ -150,7 +150,8 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "avanca [n]")) {
             return true;
         }
-        cout << "[META 1] Comando 'avanca " << n << "' validado." << endl;
+        if(x.avancar(n))
+            cout << "Avançou " << n << "' instantes." << endl;
         return true;
     } else if (comando == cmd::LPLANTAS) {
         if (verificaLixo(msg, "lplantas")) {
@@ -299,29 +300,14 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         }
         cout << "[META 1] Comando 'compra " << p1 << "' validado." << endl;
         return true;
-    } else if (comando == cmd::mov::ESQ) {
-        if (verificaLixo(msg, "e")) {
+    } else if (comando == cmd::mov::ESQ || comando == cmd::mov::DIR || comando == cmd::mov::CIMA || comando == cmd::mov::BAIXO ) {
+        if (verificaLixo(msg, comando)) {
             return true;
         }
-        cout << "[META 1] Comando 'e' (esquerda) validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::DIR) {
-        if (verificaLixo(msg, "d")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'd' (direita) validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::CIMA) {
-        if (verificaLixo(msg, "c")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'c' (cima) validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::BAIXO) {
-        if (verificaLixo(msg, "b")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'b' (baixo) validado." << endl;
+        if(!x.moveJardineiro(comando))
+            cout << "jardineiro não está no jardim ou limite de movimentação atingido" << endl;
+        x.mostra();
+        cout << "[META 1] Comando" + comando + "validado." << endl;
         return true;
     } else if (comando == cmd::ENTRA) {
         string p1;
@@ -344,13 +330,18 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if(x.entraJardineiro(l,c)){
            cout << "Jardineiro entrou no Jardim" << endl;
            x.mostra();
-        }
+        }else
+            cout << "jardineiro já existe no jardim ou não pode voltar a entrar" << endl;
         return true;
     } else if (comando == cmd::SAI) {
         if (verificaLixo(msg, "sai")) {
             return true;
         }
-        cout << "[META 1] Comando 'sai' validado." << endl;
+        if(x.saiJardineiro())
+            cout << "Jardineiro saiu do jardim" << endl;
+        else
+            cout << "Jardineiro n pode sair (limite do turno atingido ou n está no jardim)" << endl;
+        x.mostra();
         return true;
     } else {
         cout << "Erro: Comando '" << comando << "' desconhecido." << endl;
