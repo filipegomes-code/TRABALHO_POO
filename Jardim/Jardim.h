@@ -24,7 +24,6 @@ public:
     void setPlanta(Planta* p);
     Ferramenta* getFerramenta() const;
     void setFerramenta(Ferramenta* f);
-    Jardineiro* getJardineiro() const;
     int getAgua()const;
     void setAgua(int n);
     int getNutri()const;
@@ -45,6 +44,9 @@ private:
     int index(int l, int c)const; // converter l c para indice no array
     void inicializa();
     void plantaPosRandom();
+    void ferramentaPosRandom();
+
+    void apanhaFerrAutomatico(int l, int c);
 public:
     Jardim();
     Jardim(int linhas, int colunas);
@@ -65,6 +67,11 @@ public:
     // operaçoes do jardineiro que o jardim controla
     bool JardineiroDentro() const { return jard.getEstaNoJardim(); }
     const Jardineiro& getJardineiro() const { return jard; }
+    void listFerrJardineiro() const;
+    bool comprarFerrJardineiro(char tipoFerr);
+    bool pegarFerrJardineiro(int numSerie);
+    bool largarFerrJardineiro();
+    void novaFerramentaPosRandom();
 
     bool entraJardineiro(int l, int c);
     bool saiJardineiro();

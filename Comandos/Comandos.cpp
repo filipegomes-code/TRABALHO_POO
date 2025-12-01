@@ -217,7 +217,7 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "lferr")) {
             return true;
         }
-        cout << "[META 1] Comando 'lferr' validado." << endl;
+        x.listFerrJardineiro();
         return true;
     } else if (comando == cmd::COLHE) {
         string p1;
@@ -267,7 +267,11 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "larga")) {
             return true;
         }
-        cout << "[META 1] Comando 'larga' validado." << endl;
+        if(!x.largarFerrJardineiro()){
+            cout << "N tem ferramenta ativa, logo n consegue largar" << endl;
+            return true;
+        }
+        cout << "Largada ferramenta ativa" << endl;
         return true;
     } else if (comando == cmd::PEGA) {
         string p1;
@@ -283,7 +287,11 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "pega <n>")) {
             return true;
         }
-        cout << "[META 1] Comando 'pega " << n << "' validado." << endl;
+        if(!x.pegarFerrJardineiro(n)){
+            cout << "N foi possivel pegar na ferramenta" << endl;
+            return true;
+        }
+        cout << "Ferramenta " << n << " agora está ativa.\n";
         return true;
     } else if (comando == cmd::COMPRA) {
         string p1;
@@ -298,7 +306,12 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "compra <c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'compra " << p1 << "' validado." << endl;
+        char tipo = p1[0];
+        if(!x.comprarFerrJardineiro(tipo)){
+            cout << "N foi possivel comprar ferramenta do tipo: " << tipo << endl;
+            return true;
+        }
+        cout << "Jardineiro comprou ferramenta do tipo: " << tipo << endl;
         return true;
     } else if (comando == cmd::mov::ESQ || comando == cmd::mov::DIR || comando == cmd::mov::CIMA || comando == cmd::mov::BAIXO ) {
         if (verificaLixo(msg, comando)) {

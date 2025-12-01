@@ -153,10 +153,50 @@ void Jardim::inicializa() {
     }
 
     plantaPosRandom();
+    ferramentaPosRandom();
 }
 
+void Jardim::ferramentaPosRandom(){
+    // 3 ferr aleatórias
+    for (int i = 0; i < 3; ) {
+        int pos = rand() % tamJardim;
+
+        if (solo[pos].getFerramenta() == nullptr) {
+            int numRand = rand() % 3 + 1;
+            // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
+            switch (numRand) {
+                case 1: solo[pos].setFerramenta(new Adubo()); break;
+                case 2: solo[pos].setFerramenta(new Regador()); break;
+                case 3: solo[pos].setFerramenta(new Tesoura()); break;
+                default: solo[pos].setFerramenta(new Adubo()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
+            }
+            ++i;
+        }
+    }
+}
+
+// “Sempre que uma ferramenta é apanhada, aparece ‘por magia’ outra, aleatória, numa posição aleatória.”
+void Jardim::novaFerramentaPosRandom() {
+    int tentativas = 1000;
+
+    while (tentativas--) {
+        int pos = rand() % tamJardim;
+        if (solo[pos].getFerramenta() == nullptr) {
+            int numRand = rand() % 3 + 1;
+            switch (numRand) {
+                case 1: solo[pos].setFerramenta(new Adubo());   break;
+                case 2: solo[pos].setFerramenta(new Regador()); break;
+                case 3: solo[pos].setFerramenta(new Tesoura()); break;
+                default: solo[pos].setFerramenta(new Adubo());  break;
+            }
+            return;
+        }
+    }
+}
+
+
 void Jardim::plantaPosRandom() {
-    // 3 plantas aleatórias (por agora, sempre roseiras)
+    // 3 plantas aleatórias
     for (int i = 0; i < 3; ) {
         int pos = rand() % tamJardim;
 
@@ -200,10 +240,47 @@ void Jardim::mostra()const{
         cout << endl;
     }
 }
+
+
+void Jardim::listFerrJardineiro() const{
+    auto lista = jard.listarFerramentas();
+    if (lista.empty()) {
+        std::cout << "Sem ferramentas\n";
+        return;
+    }
+    for (auto& s : lista)
+        std::cout << s << "\n";
+}
+
+bool Jardim::comprarFerrJardineiro(char tipoFerr) {
+    return jard.comprarFerramenta(tipoFerr);
+}
+
+bool Jardim::pegarFerrJardineiro(int numSerie) {
+    return jard.pegarFerramenta(numSerie);
+}
+
+bool Jardim::largarFerrJardineiro() {
+    return jard.largarFerramenta();
+}
+
+void Jardim::apanhaFerrAutomatico(int l, int c) {
+    Bloco& b = getBloco(l, c);
+    if (b.getFerramenta() != nullptr) {
+        jard.apanharFerramenta(b.getFerramenta());
+        b.setFerramenta(nullptr);
+        novaFerramentaPosRandom(); // spawn “por magia”
+    }
+}
+
 // jardineiro atualiza apenas posicoes na sua classe, usado na funcao Jardim::mostra
 // para mostrar a posicao onde se encontra
 bool Jardim::entraJardineiro(int l, int c) {
-    return jard.entrar(l,c);
+    if(!jard.entrar(l,c))
+        return false;
+    //
+    apanhaFerrAutomatico(l,c);
+    return true;
 }
 
 bool Jardim::saiJardineiro() {
@@ -241,6 +318,8 @@ bool Jardim::moveJardineiro(string dir){
         // Wrap vertical
         if(col < 0) col = dimCol-1;
         else if(col >= dimCol) col = 0;
+        // apanha ferramenta automaticamente
+        apanhaFerrAutomatico(lin,col);
 
         return jard.atualizaPos(lin, col);
     }

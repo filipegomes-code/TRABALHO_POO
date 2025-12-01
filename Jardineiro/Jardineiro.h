@@ -31,15 +31,14 @@ public:
     void limparInventario();
 
     static char getSimbolo() {return '*';}
-    void move(char dir);
     bool sair();
     bool entrar(int l, int c);
     bool podeMover() const {return movimentosRestantes > 0;}
     bool atualizaPos(int l, int c);
 
-    void pegarFerramenta(int numSerie);
-    void largarFerramenta();
-    void comprarFerramenta(char tipo);
+    bool pegarFerramenta(int numSerie);
+    bool largarFerramenta();
+    bool comprarFerramenta(char tipo);
 
     // apanha a ferramenta de uma posição e adiciona ao inventário
     void apanharFerramenta(Ferramenta* f);
@@ -55,7 +54,7 @@ public:
     Ferramenta* getFerramentaAtiva() const { return ferramentaAtiva; }
 
     // lista as ferramentas no inventario (vetor) do jardineiro
-    void listarFerramentas() const;
+    std::vector<std::string> listarFerramentas() const;
 };
 
 

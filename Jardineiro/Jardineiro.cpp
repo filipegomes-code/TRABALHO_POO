@@ -4,6 +4,13 @@
 
 #include "Jardineiro.h"
 
+#include "Ferramentas/Ferramenta.h"
+#include "Ferramentas/Adubo/Adubo.h"
+#include "Ferramentas/Regador/Regador.h"
+#include "Ferramentas/Tesoura/Tesoura.h"
+
+#include <iostream>
+
 int Jardineiro::compararInstante = 0;
 
 Jardineiro::Jardineiro() {
@@ -13,6 +20,10 @@ Jardineiro::~Jardineiro() {
 }
 
 void Jardineiro::limparInventario() {
+    for(Ferramenta* f : inventario)
+        delete f;
+    inventario.clear();
+    ferramentaAtiva = nullptr;
 }
 
 bool Jardineiro::sair() {
@@ -20,6 +31,7 @@ bool Jardineiro::sair() {
         posLin = -1;
         posCol = -1;
         estaNoJardim = false;
+        entradasSaidasRestantes--;
         return true;
     }
     return false;
@@ -47,16 +59,61 @@ bool Jardineiro::atualizaPos(int l, int c) {
     return false;
 }
 
-void Jardineiro::pegarFerramenta(int numSerie) {
+bool Jardineiro::pegarFerramenta(int numSerie) {
+    for (Ferramenta* f : inventario) {
+        if (f->getNumSerie() == numSerie) {
+            ferramentaAtiva = f;
+            return true;
+        }
+    }
+    return false;
 }
 
-void Jardineiro::largarFerramenta() {
+bool Jardineiro::largarFerramenta() {
+    if (!ferramentaAtiva)
+        return false;
+
+    ferramentaAtiva = nullptr;
+    return true;
 }
 
-void Jardineiro::comprarFerramenta(char tipo) {
+bool Jardineiro::comprarFerramenta(char tipo) {
+    Ferramenta* nova = nullptr;
+
+    switch (tipo) {
+        case 'g': // regador
+            nova = new Regador();
+            break;
+        case 'a': // adubo
+            nova = new Adubo();
+            break;
+        case 't': // tesoura
+            nova = new Tesoura();
+            break;
+        case 'z':
+            // nova = new FerramentaZ();
+            break;
+        default:
+            return false;
+    }
+
+    inventario.push_back(nova);
+
+    if (!ferramentaAtiva)
+        ferramentaAtiva = nova;
+
+    return true;
 }
 
 void Jardineiro::apanharFerramenta(Ferramenta *f) {
+    if(!f)
+        return;
+
+    inventario.push_back(f);
+
+    if(!ferramentaAtiva){
+        ferramentaAtiva = f;
+    }
 }
 
 void Jardineiro::reiniciaContadores() {
@@ -66,5 +123,20 @@ void Jardineiro::reiniciaContadores() {
     entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 }
 
-void Jardineiro::listarFerramentas() const {
+std::vector<std::string> Jardineiro::listarFerramentas() const {
+    std::vector<std::string> out;
+
+    for (auto* f : inventario) {
+        std::string linha =
+                "[" + std::to_string(f->getNumSerie()) + "] " +
+                f->getTipo() + std::string(" - ") +
+                f->getDescricao();
+
+        if (f == ferramentaAtiva)
+            linha += " (ativa)";
+
+        out.push_back(linha);
+    }
+
+    return out;
 }
