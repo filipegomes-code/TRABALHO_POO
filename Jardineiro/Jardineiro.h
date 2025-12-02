@@ -39,6 +39,7 @@ public:
     bool pegarFerramenta(int numSerie);
     bool largarFerramenta();
     bool comprarFerramenta(char tipo);
+    void FerrDestruida();
 
     // apanha a ferramenta de uma posição e adiciona ao inventário
     void apanharFerramenta(Ferramenta* f);

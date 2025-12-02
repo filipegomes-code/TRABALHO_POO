@@ -3,16 +3,26 @@
 //
 
 #include "Adubo.h"
+#include "Settings.h"
 #include "Jardim/Jardim.h"
 
 Adubo::Adubo()
-        : Ferramenta(), capacidadeAdubo(0) {}
+        : Ferramenta(), capacidadeAdubo(Settings::Adubo::capacidade) {}
 
-bool Adubo::aplicaEfeito(Jardim *j, int l, int c) {
-    // lógica real fica para depois
-    return false;
+bool Adubo::aplicaEfeito(Bloco& b) {
+    if (capacidadeAdubo <= 0)
+        return false;
+
+    int dose = Settings::Adubo::dose;
+    if (capacidadeAdubo < dose)
+        dose = capacidadeAdubo;
+
+    b.setNutri(b.getNutri() + dose);
+    capacidadeAdubo -= dose;
+
+    return capacidadeAdubo > 0;
 }
 
 std::string Adubo::getDescricao() const {
-    return "Adubo";
+    return "Adubo (qtd=" + std::to_string(capacidadeAdubo) + ")";
 }

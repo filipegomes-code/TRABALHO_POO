@@ -15,20 +15,25 @@ protected:
     int agua;
     std::string beleza;
 
+    virtual void Absorve(Bloco& b) = 0;
+    virtual bool CheckMorte() = 0;
+
 public:
     Planta(int n, int a, std::string b);
     virtual ~Planta();
 
-    // virtual não puras
-    virtual void get_valores();
-    // futuramente ter uma funcao que encapsule cada comportamente da planta
+    // getters básicos – úteis para lplantas / lplanta / larea
+    int getAgua() const        { return agua; }
+    int getNutrientes() const  { return nutrientes; }
+    const std::string& getBeleza() const { return beleza; }
 
     //virtual puras -> fazem coisas especificas para cada classe
     virtual char Simbolo()const=0;
-    virtual void Absorve() = 0;
-    virtual void CheckMorte() = 0;
 
+    // Um único passo por instante
+    virtual bool passo(Jardim& j, int l, int c, Bloco& b);
 
+    virtual std::string getInfo() const;
 };
 
 

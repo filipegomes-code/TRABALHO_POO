@@ -116,6 +116,19 @@ void Jardineiro::apanharFerramenta(Ferramenta *f) {
     }
 }
 
+void Jardineiro::FerrDestruida() {
+    if(ferramentaAtiva == nullptr)
+        return;
+
+    auto it = std::find(inventario.begin(), inventario.end(), ferramentaAtiva);
+
+    if(it != inventario.end()){
+        delete ferramentaAtiva;
+        inventario.erase(it);
+    }
+    ferramentaAtiva = nullptr;
+}
+
 void Jardineiro::reiniciaContadores() {
     movimentosRestantes = Settings::Jardineiro::max_movimentos;
     plantacoesRestantes = Settings::Jardineiro::max_plantacoes;

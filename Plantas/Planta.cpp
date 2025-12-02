@@ -11,7 +11,4 @@ Planta::Planta(int n, int a, std::string b) : nutrientes(n), agua(a), beleza(std
 
 Planta::~Planta()= default;
 
-void Planta::get_valores(){
-    std::cout << "nutrientes:" << nutrientes << "Agua:" << agua << "Beleza: " << beleza << std::endl;
-}
 

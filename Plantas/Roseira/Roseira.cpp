@@ -22,10 +22,6 @@ void Roseira::CheckMorte(){
     // etc..
 }
 
-char Roseira::Simbolo() const {
-    return 'r';
-}
-
 // fazer funcao para retornar char 'r' -> representa Roseira
 
 

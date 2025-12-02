@@ -327,8 +327,42 @@ bool Jardim::moveJardineiro(string dir){
 }
 
 bool Jardim::avancar(int n) {
-    instantes += n;
-    jard.reiniciaContadores();
+    if (n <= 0) return false;
+
+    for (int i = 0; i < n; ++i) {
+        ++instantes;
+
+        if (jard.getEstaNoJardim()) {
+            Ferramenta* f = jard.getFerramentaAtiva();
+            if (f != nullptr) {
+                int l = jard.getPosLin();
+                int c = jard.getPosCol();
+
+                Bloco& b = getBloco(l, c);
+                bool viva = f->aplicaEfeito(b);
+                if (!viva) {
+                    jard.FerrDestruida();
+                }
+            }
+        }
+
+        // 2) Todas as plantas atuam (um passo de tempo para cada)
+        for (int l = 0; l < dimLin; ++l) {
+            for (int c = 0; c < dimCol; ++c) {
+                Bloco& b = getBloco(l, c);
+                Planta* p = b.getPlanta();
+                if (p != nullptr) {
+                    bool viva = p->passo(*this, l, c, b);
+                    if (!viva) {
+                        delete p;
+                        b.setPlanta(nullptr);
+                    }
+                }
+            }
+        }
+
+        jard.reiniciaContadores();
+    }
     return true;
 }
 

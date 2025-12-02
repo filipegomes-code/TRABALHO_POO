@@ -47,6 +47,7 @@ private:
     void ferramentaPosRandom();
 
     void apanhaFerrAutomatico(int l, int c);
+    void novaFerramentaPosRandom();
 public:
     Jardim();
     Jardim(int linhas, int colunas);
@@ -71,7 +72,6 @@ public:
     bool comprarFerrJardineiro(char tipoFerr);
     bool pegarFerrJardineiro(int numSerie);
     bool largarFerrJardineiro();
-    void novaFerramentaPosRandom();
 
     bool entraJardineiro(int l, int c);
     bool saiJardineiro();

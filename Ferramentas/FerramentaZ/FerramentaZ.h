@@ -11,7 +11,7 @@ class FerramentaZ : public Ferramenta {
 public:
     FerramentaZ();
 
-    bool aplicaEfeito(Jardim *j, int l, int c) override;
+    bool aplicaEfeito(Bloco& b) override;
     char getTipo() const override {return 'z';}
     std::string getDescricao() const override;
 private:

@@ -8,13 +8,24 @@
 #include "Plantas/Planta.h"
 
 class Roseira : public Planta{
+private:
+    int aguaAbsVida = 0;
+    int nutrAbsVida = 0;
+
+    // helpers privados
+    bool vizinhosTodosComPlanta(const Jardim& j, int l, int c) const;
+    void tentaMultiplicar(Jardim& j, int l, int c, Bloco& b);
+
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
+
 public:
     Roseira();
     ~Roseira() override; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
 
-    char Simbolo() const override;
-    void Absorve() override;
-    void CheckMorte() override;
+    char Simbolo() const override { return 'r';}
+    bool passo(Jardim& j, int l, int c, Bloco& b) override;
 
 };
 

@@ -7,9 +7,13 @@
 
 Tesoura::Tesoura() : Ferramenta() {}
 
-bool Tesoura::aplicaEfeito(Jardim *j, int l, int c) {
-    // Ainda não implementamos lógica real
-    return false;
+bool Tesoura::aplicaEfeito(Bloco& b) {
+    // por agora: se houver planta, corta-a (depois afinamos para “feia”)
+    if (b.getPlanta() != nullptr) {
+        delete b.getPlanta();
+        b.setPlanta(nullptr);
+    }
+    return true; // tesoura não se gasta
 }
 
 std::string Tesoura::getDescricao() const {
