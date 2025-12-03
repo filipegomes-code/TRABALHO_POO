@@ -241,7 +241,11 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "colhe <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'colhe " << p1 << "' validado." << endl;
+        if(x.colher(l,c))
+            cout << "planta foi colhida" << endl;
+        else
+            cout << "N existe planta para colher ou esgotou limite máximo" << endl;
+        x.mostra();
         return true;
     } else if (comando == cmd::PLANTA) {
         string p1, p2;
@@ -265,7 +269,12 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "planta <l><c> <tipo>")) {
             return true;
         }
-        cout << "[META 1] Comando 'planta " << p1 << " " << p2 << "' validado." << endl;
+        char tipoPlanta = p2[0];
+        if(x.plantar(l,c,tipoPlanta))
+            cout << "Plantou planta do tipo: " + p2 << endl;
+        else
+            cout << "Já existe 1 planta nessa posicao ou limite máximo por turno atingido" << endl;
+        x.mostra();
         return true;
     } else if (comando == cmd::LARGA) {
         if (verificaLixo(msg, "larga")) {

@@ -11,8 +11,6 @@
 
 #include <iostream>
 
-int Jardineiro::compararInstante = 0;
-
 Jardineiro::Jardineiro() {
 }
 
@@ -152,4 +150,20 @@ std::vector<std::string> Jardineiro::listarFerramentas() const {
     }
 
     return out;
+}
+
+bool Jardineiro::podePlantar() const {
+    return plantacoesRestantes;
+}
+
+void Jardineiro::registaPlantacao() {
+    --plantacoesRestantes;
+}
+
+bool Jardineiro::podeColher() const {
+    return colheitasRestantes;
+}
+
+void Jardineiro::registaColheita() {
+    ++colheitasRestantes;
 }

@@ -13,7 +13,6 @@ class Ferramenta;
 class Jardineiro {
 private:
     int posLin = -1, posCol=-1;
-    static int compararInstante;
     bool estaNoJardim = false;
     std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
     Ferramenta* ferramentaAtiva = nullptr; // ferramenta na mão do jardineiro
@@ -40,6 +39,11 @@ public:
     bool largarFerramenta();
     bool comprarFerramenta(char tipo);
     void FerrDestruida();
+    bool podePlantar() const;
+    void registaPlantacao();
+    bool podeColher() const;
+    void registaColheita();
+
 
     // apanha a ferramenta de uma posição e adiciona ao inventário
     void apanharFerramenta(Ferramenta* f);

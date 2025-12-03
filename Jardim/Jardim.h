@@ -79,15 +79,14 @@ public:
     bool comprarFerrJardineiro(char tipoFerr);
     bool pegarFerrJardineiro(int numSerie);
     bool largarFerrJardineiro();
+    bool plantar(int l , int c, char tipo);
+    bool colher(int l, int c);
 
     bool entraJardineiro(int l, int c);
     bool saiJardineiro();
     bool moveJardineiro(std::string dir);   // 'e','d','c','b'
     bool avancar(int n);
 
-    //  Operações futuras sobre plantas
-    bool plantar(int l, int c, char tipo); // ainda por implementar
-    bool colher(int l, int c);             // ainda por implementar
 
     void mostra() const;
 

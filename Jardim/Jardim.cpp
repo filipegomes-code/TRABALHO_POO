@@ -9,9 +9,11 @@
 #include "Ferramentas/Adubo/Adubo.h"
 #include "Ferramentas/Regador/Regador.h"
 #include "Ferramentas/Tesoura/Tesoura.h"
+#include "Ferramentas/FerramentaZ/FerramentaZ.h"
 #include "Plantas/Roseira/Roseira.h"
 #include "Plantas/Cacto/Cacto.h"
 #include "Plantas/ErvaDaninha/ErvaDaninha.h"
+#include "Plantas/Exotica/Exotica.h"
 
 using namespace std;
 
@@ -369,26 +371,6 @@ void Jardim::ferramentaPosRandom(){
     }
 }
 
-// “Sempre que uma ferramenta é apanhada, aparece ‘por magia’ outra, aleatória, numa posição aleatória.”
-void Jardim::novaFerramentaPosRandom() {
-    int tentativas = 1000;
-
-    while (tentativas--) {
-        int pos = rand() % tamJardim;
-        if (solo[pos].getFerramenta() == nullptr) {
-            int numRand = rand() % 3 + 1;
-            switch (numRand) {
-                case 1: solo[pos].setFerramenta(new Adubo());   break;
-                case 2: solo[pos].setFerramenta(new Regador()); break;
-                case 3: solo[pos].setFerramenta(new Tesoura()); break;
-                default: solo[pos].setFerramenta(new Adubo());  break;
-            }
-            return;
-        }
-    }
-}
-
-
 void Jardim::plantaPosRandom() {
     // 3 plantas aleatórias
     for (int i = 0; i < 3; ) {
@@ -456,6 +438,78 @@ bool Jardim::pegarFerrJardineiro(int numSerie) {
 
 bool Jardim::largarFerrJardineiro() {
     return jard.largarFerramenta();
+}
+
+bool Jardim::plantar(int l, int c, char tipo) {
+    // verificar limite de plantações por turno
+    if (!jard.podePlantar())
+        return false;
+
+    Bloco& b = getBloco(l, c);
+
+    // posição já tem planta → falha
+    if (b.getPlanta() != nullptr)
+        return false;
+
+    Planta* nova = nullptr;
+
+    switch (tipo) {
+        case 'c':
+            nova = new Cacto();
+            break;
+        case 'r':
+            nova = new Roseira();
+            break;
+        case 'e':
+            nova = new ErvaDaninha();
+            break;
+        case 'z':
+            // nova = new Exotica();
+            break;
+        default:
+            return false;
+    }
+
+    b.setPlanta(nova);
+    jard.registaPlantacao();
+    return true;
+}
+
+bool Jardim::colher(int l, int c) {
+    // verifica limites de colher
+    if (!jard.podeColher())
+        return false;
+
+    Bloco& b = getBloco(l, c);
+    Planta* p = b.getPlanta();
+
+    // não há planta nessa posição
+    if (p == nullptr)
+        return false;
+
+    delete p;
+    b.setPlanta(nullptr);
+    jard.registaColheita();
+    return true;
+}
+
+// “Sempre que uma ferramenta é apanhada, aparece ‘por magia’ outra, aleatória, numa posição aleatória.”
+void Jardim::novaFerramentaPosRandom() {
+    int tentativas = 1000;
+
+    while (tentativas--) {
+        int pos = rand() % tamJardim;
+        if (solo[pos].getFerramenta() == nullptr) {
+            int numRand = rand() % 3 + 1;
+            switch (numRand) {
+                case 1: solo[pos].setFerramenta(new Adubo());   break;
+                case 2: solo[pos].setFerramenta(new Regador()); break;
+                case 3: solo[pos].setFerramenta(new Tesoura()); break;
+                default: solo[pos].setFerramenta(new Adubo());  break;
+            }
+            return;
+        }
+    }
 }
 
 void Jardim::apanhaFerrAutomatico(int l, int c) {
