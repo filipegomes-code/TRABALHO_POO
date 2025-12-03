@@ -8,13 +8,10 @@
 #include "Ferramentas/Adubo/Adubo.h"
 #include "Ferramentas/Regador/Regador.h"
 #include "Ferramentas/Tesoura/Tesoura.h"
-
-#include <iostream>
-
-Jardineiro::Jardineiro() {
-}
+#include "Ferramentas/FerramentaZ/FerramentaZ.h"
 
 Jardineiro::~Jardineiro() {
+    limparInventario();
 }
 
 void Jardineiro::limparInventario() {
@@ -48,7 +45,7 @@ bool Jardineiro::entrar(int l, int c) {
 
 // se esgotar o numero de movimentos possiveis retorna false, senao true
 bool Jardineiro::atualizaPos(int l, int c) {
-    if(movimentosRestantes > 0) {
+    if(podeMover()) {
         posLin = l;
         posCol = c;
         movimentosRestantes--;
@@ -89,7 +86,7 @@ bool Jardineiro::comprarFerramenta(char tipo) {
             nova = new Tesoura();
             break;
         case 'z':
-            // nova = new FerramentaZ();
+            nova = new FerramentaZ();
             break;
         default:
             return false;
@@ -165,5 +162,5 @@ bool Jardineiro::podeColher() const {
 }
 
 void Jardineiro::registaColheita() {
-    ++colheitasRestantes;
+    --colheitasRestantes;
 }

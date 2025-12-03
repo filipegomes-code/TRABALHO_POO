@@ -281,7 +281,7 @@ std::string Jardim::listaAreaIndicada(int l, int c) const {
         return oss.str();
     }
 
-    if(temPlanta || temFerr || temJard){
+    if(temPlanta || temFerr){
         // jardineiro
         if (temJard)
             oss << " | jardineiro: *";
@@ -358,12 +358,13 @@ void Jardim::ferramentaPosRandom(){
         int pos = rand() % tamJardim;
 
         if (solo[pos].getFerramenta() == nullptr) {
-            int numRand = rand() % 3 + 1;
+            int numRand = rand() % 4 + 1;
             // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
             switch (numRand) {
                 case 1: solo[pos].setFerramenta(new Adubo()); break;
                 case 2: solo[pos].setFerramenta(new Regador()); break;
                 case 3: solo[pos].setFerramenta(new Tesoura()); break;
+                case 4: solo[pos].setFerramenta(new FerramentaZ()); break;
                 default: solo[pos].setFerramenta(new Adubo()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
             }
             ++i;
@@ -377,12 +378,13 @@ void Jardim::plantaPosRandom() {
         int pos = rand() % tamJardim;
 
         if (solo[pos].getPlanta() == nullptr) {
-            int numRand = rand() % 3 + 1;
+            int numRand = rand() % 4 + 1;
             // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
             switch (numRand) {
                 case 1: solo[pos].setPlanta(new Roseira()); break;
                 case 2: solo[pos].setPlanta(new Cacto()); break;
                 case 3: solo[pos].setPlanta(new ErvaDaninha()); break;
+                case 4: solo[pos].setPlanta(new Exotica()); break;
                 default: solo[pos].setPlanta(new Roseira()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
             }
             ++i;
@@ -463,8 +465,8 @@ bool Jardim::plantar(int l, int c, char tipo) {
         case 'e':
             nova = new ErvaDaninha();
             break;
-        case 'z':
-            // nova = new Exotica();
+        case 'x':
+            nova = new Exotica();
             break;
         default:
             return false;

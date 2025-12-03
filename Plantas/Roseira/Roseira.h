@@ -13,9 +13,7 @@ private:
     int nutrAbsVida = 0;
     bool All_PosVizOcupadas = false;
 
-    // helpers privados
     bool vizinhosTodosComPlanta(const Jardim& j, int l, int c) const;
-    bool PosVizinhasOcupadas(const Jardim& j, int l, int c) const;
     void tentaMultiplicar(Jardim& j, int l, int c);
 
 protected:

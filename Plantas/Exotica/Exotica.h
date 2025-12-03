@@ -8,18 +8,22 @@
 
 
 class Exotica : public Planta {
-public:
-    Exotica();
-    ~Exotica() override;
+private:
+    int instantesSoloSeco = 0;
 
-    char Simbolo() const override;
-    std::string getTipo() const;
-
+    void tentaMultiplicar(Jardim& j, int l, int c);
 protected:
     void Absorve(Bloco& b) override;
     bool CheckMorte() override;
-private:
-    int instantesSoloSeco; // contador para a condição de morte
+
+public:
+    Exotica();
+    ~Exotica() override = default;
+
+    char Simbolo() const override { return 'x';}
+    bool passo(Jardim& j, int l, int c, Bloco& b) override;
+
+
 };
 
 

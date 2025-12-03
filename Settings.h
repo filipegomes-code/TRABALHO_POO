@@ -20,6 +20,13 @@ class Settings {
         static const int capacidade = 100;
         static const int dose = 10;
     };
+    class FerramentaZ{
+    public:
+        static const int capacidade_inicial       = 50;  // cargas
+        static const int custo_por_uso           = 5;    // cargas gastas num uso com sucesso
+        static const int nutrientes_para_converter = 15; // nutrientes consumidos
+        static const int agua_fornecida          = 25;   // água adicionada ao solo
+    };
     class Jardineiro {
     public:
         static const int max_movimentos = 10;
@@ -67,6 +74,25 @@ class Settings {
         static const int nova_nutrientes = 5;
         static const int original_nutrientes = 5;
     };
+    class Exotica{
+        public:
+        static const int inicial_agua = 20;
+        static const int inicial_nutrientes = 20;
+        static const int absorcao_agua = 8;
+        static const int absorcao_nutrientes = 2;
+        static const int enriquece_solo_nutri = 3; // polen fertil, liberta 3 uni nutri para o solo
+        static const int morre_agua_solo_menor = 1;
+        static const int morre_agua_solo_instantes = 3;
+        static const int morre_agua_menor = 1;
+        static const int morre_nutri_solo = 10;
+        static const int multiplica_nutrientes_maior = 30;
+        static const int multiplica_agua_maior = 40;
+        static const int nova_nutrientes = 10;
+        static const int nova_agua = 10;
+        static const int original_perde_nutrientes = 10;
+        static const int original_perde_agua = 10;
+    };
+
 };
 
 #endif //SETTINGS_SETTINGS_H

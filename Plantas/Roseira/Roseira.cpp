@@ -49,7 +49,7 @@ void Roseira::tentaMultiplicar(Jardim& j, int l, int c) {
 }
 
 // verifica se TODAS as posições vizinhas imediatas têm planta
-bool Roseira::PosVizinhasOcupadas(const Jardim& j, int l, int c) const {
+bool Roseira::vizinhosTodosComPlanta(const Jardim& j, int l, int c) const {
     int dl[8] = {-1,-1,-1,0,0,1,1,1};
     int dc[8] = {-1,0,1,-1,1,-1,0,1};
 
@@ -131,12 +131,11 @@ bool Roseira::passo(Jardim& j, int l, int c, Bloco& b) {
     Absorve(b);
 
     // 2) morte pela condição "todas as vizinhas com planta"
-    if (PosVizinhasOcupadas(j, l, c)) {
+    if (vizinhosTodosComPlanta(j, l, c)) {
         b.setAgua( b.getAgua() + aguaAbsVida / 2 );
         b.setNutri( b.getNutri() + nutrAbsVida / 2 );
         return false;
     }
-
 
     if (CheckMorte()) {
         // ao morrer deixa metade da agua e nutri , absorvido na sua vida

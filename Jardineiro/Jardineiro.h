@@ -23,16 +23,16 @@ private:
     int colheitasRestantes = Settings::Jardineiro::max_colheitas;
     int entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 
-public:
-    Jardineiro();
-    ~Jardineiro();
-
     void limparInventario();
+
+public:
+    Jardineiro()=default;
+    ~Jardineiro();
 
     static char getSimbolo() {return '*';}
     bool sair();
     bool entrar(int l, int c);
-    bool podeMover() const {return movimentosRestantes > 0;}
+    bool podeMover() const {return movimentosRestantes;}
     bool atualizaPos(int l, int c);
 
     bool pegarFerramenta(int numSerie);
