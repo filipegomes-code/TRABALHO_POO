@@ -11,10 +11,12 @@ class Roseira : public Planta{
 private:
     int aguaAbsVida = 0;
     int nutrAbsVida = 0;
+    bool All_PosVizOcupadas = false;
 
     // helpers privados
     bool vizinhosTodosComPlanta(const Jardim& j, int l, int c) const;
-    void tentaMultiplicar(Jardim& j, int l, int c, Bloco& b);
+    bool PosVizinhasOcupadas(const Jardim& j, int l, int c) const;
+    void tentaMultiplicar(Jardim& j, int l, int c);
 
 protected:
     void Absorve(Bloco& b) override;
@@ -22,7 +24,7 @@ protected:
 
 public:
     Roseira();
-    ~Roseira() override; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
+    ~Roseira() override=default; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
 
     char Simbolo() const override { return 'r';}
     bool passo(Jardim& j, int l, int c, Bloco& b) override;

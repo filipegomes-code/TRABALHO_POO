@@ -31,9 +31,9 @@ public:
     virtual char Simbolo()const=0;
 
     // Um único passo por instante
-    virtual bool passo(Jardim& j, int l, int c, Bloco& b);
+    virtual bool passo(Jardim& j, int l, int c, Bloco& b) = 0;
 
-    virtual std::string getInfo() const;
+    //virtual std::string getInfo() const;
 };
 
 

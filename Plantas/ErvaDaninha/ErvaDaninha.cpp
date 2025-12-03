@@ -42,6 +42,8 @@ void ErvaDaninha::tentaMultiplicar(Jardim& j, int l, int c) {
 
         // cria nova erva no vizinho
         auto* novo = new ErvaDaninha();
+        novo->agua = Settings::ErvaDaninha::inicial_agua;
+        novo->nutrientes = Settings::ErvaDaninha::nova_nutrientes;
         viz.setPlanta(novo);
 
         instantesDesdeMult = 0; // reseta instantes

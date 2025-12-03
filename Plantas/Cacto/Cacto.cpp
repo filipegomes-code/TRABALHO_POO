@@ -2,8 +2,9 @@
 // Created by Filipe Gomes on 29/10/2025.
 //
 #include "Cacto.h"
+#include "../../Settings.h"
 #include <algorithm>
-#include "iostream"
+#include <iostream>
 
 // CACTO
 Cacto::Cacto() : Planta(0,0, "neutra"){}
@@ -64,7 +65,9 @@ void Cacto::Absorve(Bloco& b) {
 
     // até 5 nutrientes do solo
     int nutrSolo = b.getNutri();
-    int absorveNutr = std::min(Settings::Cacto::absorcao_nutrientes, nutrSolo);
+    int nutrMaxAbsorve = Settings::Cacto::absorcao_nutrientes;
+    int absorveNutr = (nutrMaxAbsorve >= nutrSolo) ? nutrSolo : nutrMaxAbsorve;
+
     if (absorveNutr > 0) {
         b.setNutri(nutrSolo - absorveNutr);
         nutrientes += absorveNutr;
@@ -86,7 +89,7 @@ void Cacto::Absorve(Bloco& b) {
 
 bool Cacto::CheckMorte(){
     // se em 3 instantes seguidos tiver os valores que a matam, é destruida.
-    if (contaAguaAlta >= Settings::Cacto::morre_agua_solo_instantes || contaSemNutrientes >= Settings::Cacto::morre_nutrientes_solo_instantes)
+    if (contaAguaAlta >= Settings::Cacto::morre_agua_solo_instantes || contaSemNutrientes > Settings::Cacto::morre_nutrientes_solo_instantes)
         return true;
     return false;
 }

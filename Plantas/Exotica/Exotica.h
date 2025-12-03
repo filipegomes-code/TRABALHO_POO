@@ -13,9 +13,11 @@ public:
     ~Exotica() override;
 
     char Simbolo() const override;
-    void Absorve() override;
-    void CheckMorte() override;
     std::string getTipo() const;
+
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
 private:
     int instantesSoloSeco; // contador para a condição de morte
 };

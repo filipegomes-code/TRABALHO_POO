@@ -127,7 +127,7 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "fim")) {
             return true;
         }
-        cout << "[META 1] Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
+        cout << "Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
         x.destroi(); // -> deleta os blocos 1º dps o jardim todo
         return false;
     }
@@ -153,11 +153,11 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if(x.avancar(n))
             cout << "Avançou " << n << "' instantes." << endl;
         return true;
-    } else if (comando == cmd::LPLANTAS) {
+    } else if (comando == cmd::LPLANTAS) { // todas plantas existentes no jardim
         if (verificaLixo(msg, "lplantas")) {
             return true;
         }
-        cout << "[META 1] Comando 'lplantas' validado." << endl;
+        cout << x.listaAllPlantas();
         return true;
     } else if (comando == cmd::LPLANTA) {
         string p1;
@@ -177,13 +177,13 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "lplanta <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'lplanta " << p1 << "' validado." << endl;
+        cout << x.lista1Planta(l,c);
         return true;
     } else if (comando == cmd::LAREA) {
         if (verificaLixo(msg, "larea")) {
             return true;
         }
-        cout << "[META 1] Comando 'larea' validado." << endl;
+        cout << x.listaArea();
         return true;
     } else if (comando == cmd::LSOLO) {
         string p1, p2;
@@ -211,7 +211,11 @@ bool Executa_Comandos(istream& msg, Jardim& x){
         if (verificaLixo(msg, "lsolo <l><c> [n]")) {
             return true;
         }
-        cout << "[META 1] Comando 'lsolo " << p1 << (temN ? " " + p2 : "") << "' validado." << endl;
+        if(!temN){
+            cout << x.listaAreaIndicada(l,c);
+            return true;
+        }
+        cout << x.listaAreaRaio(l,c,n);
         return true;
     } else if (comando == cmd::LFERR){
         if (verificaLixo(msg, "lferr")) {

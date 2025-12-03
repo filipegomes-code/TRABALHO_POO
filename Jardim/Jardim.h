@@ -65,6 +65,13 @@ public:
     Bloco& getBloco(int l, int c);
     const Bloco& getBloco(int l, int c) const;
 
+    // operaçoes de listar informação
+    std::string listaAllPlantas()const;
+    std::string lista1Planta(int l, int c) const;
+    std::string listaArea() const;
+    std::string listaAreaIndicada(int l, int c) const;
+    std::string listaAreaRaio(int l, int c, int n)const;
+
     // operaçoes do jardineiro que o jardim controla
     bool JardineiroDentro() const { return jard.getEstaNoJardim(); }
     const Jardineiro& getJardineiro() const { return jard; }

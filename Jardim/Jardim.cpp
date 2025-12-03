@@ -4,6 +4,7 @@
 
 #include "Jardim.h"
 #include "../Settings.h"
+#include <sstream>
 #include "Comandos/Comandos.h"
 #include "Ferramentas/Adubo/Adubo.h"
 #include "Ferramentas/Regador/Regador.h"
@@ -135,6 +136,199 @@ Bloco& Jardim::getBloco(int l, int c) {
 
 const Bloco& Jardim::getBloco(int l, int c) const {
     return solo[index(l, c)];
+}
+
+std::string Jardim::listaAllPlantas() const {
+    std::ostringstream oss;
+
+    bool encontrou = false;
+
+    for (int l = 0; l < dimLin; ++l) {
+        for (int c = 0; c < dimCol; ++c) {
+            const Bloco& b = getBloco(l, c);
+            Planta* p = b.getPlanta();
+
+            if (p != nullptr) {
+                encontrou = true;
+
+                char lc_lin = (char)('a' + l);
+                char lc_col = (char)('a' + c);
+
+                oss << "posição " << lc_lin << lc_col
+                    << " - tipo='" << p->Simbolo() << "'"
+                    << " | planta: agua=" << p->getAgua()
+                    << ", nutr=" << p->getNutrientes()
+                    << ", beleza=\"" << p->getBeleza() << "\""
+                    << " | solo: agua=" << b.getAgua()
+                    << ", nutr=" << b.getNutri()
+                    << "\n";
+            }
+        }
+    }
+
+    if (!encontrou)
+        oss << "Nao ha plantas no jardim.\n";
+
+    return oss.str();
+}
+
+std::string Jardim::lista1Planta(int l, int c) const{
+    std::ostringstream oss;
+
+    const Bloco& b = getBloco(l,c);
+    Planta* p = b.getPlanta();
+
+    if(!b.getPlanta()){
+        oss << "N tem planta nessa posicao\n";
+        return oss.str();
+    }
+
+    char lc_lin = (char)('a' + l);
+    char lc_col = (char)('a' + c);
+
+    oss << "posição " << lc_lin << lc_col
+        << " - tipo='" << p->Simbolo() << "'"
+        << " | planta: agua=" << p->getAgua()
+        << ", nutr=" << p->getNutrientes()
+        << ", beleza=\"" << p->getBeleza() << "\""
+        << " | solo: agua=" << b.getAgua()
+        << ", nutr=" << b.getNutri()
+        << "\n";
+
+    return oss.str();
+}
+
+std::string Jardim::listaArea() const {
+    std::ostringstream oss;
+
+    bool encontrou = false;
+
+    for (int l = 0; l < dimLin; ++l) {
+        for (int c = 0; c < dimCol; ++c) {
+            const Bloco& b = getBloco(l, c);
+
+            bool temPlanta = (b.getPlanta());
+            bool temFerr   = (b.getFerramenta());
+            bool temJard   = (jard.getEstaNoJardim() &&
+                              jard.getPosLin() == l &&
+                              jard.getPosCol() == c);
+
+            // posição totalmente vazia = ignora
+            if (!temPlanta && !temFerr && !temJard)
+                continue;
+
+            encontrou = true;
+
+            char lc_lin = (char)('a' + l);
+            char lc_col = (char)('a' + c);
+
+            oss << "posicao " << lc_lin << lc_col
+                << " | solo: agua=" << b.getAgua()
+                << ", nutr=" << b.getNutri();
+
+            // jardineiro
+            if (temJard)
+                oss << " | jardineiro: *";
+
+            // planta
+            if (temPlanta) {
+                const Planta* p = b.getPlanta();
+                oss << " | planta: tipo='" << p->Simbolo() << "'"
+                    << ", agua=" << p->getAgua()
+                    << ", nutr=" << p->getNutrientes()
+                    << ", beleza=\"" << p->getBeleza() << "\"";
+            }
+
+            // ferramenta
+            if (temFerr) {
+                const Ferramenta* f = b.getFerramenta();
+                oss << " | ferramenta: tipo='" << f->getTipo() << "'";
+            }
+
+            oss << "\n";
+        }
+    }
+
+    if (!encontrou)
+        oss << "Nao ha nenhuma posicao com conteudo no jardim.\n";
+
+    return oss.str();
+}
+
+// se a pessoa n definir raio [n], apenas mostra info do bloco nessa posicao
+std::string Jardim::listaAreaIndicada(int l, int c) const {
+    std::ostringstream oss;
+
+    const Bloco& b = getBloco(l, c);
+    char lc_lin = (char)('a' + l);
+    char lc_col = (char)('a' + c);
+
+
+    bool temPlanta = (b.getPlanta());
+    bool temFerr   = (b.getFerramenta());
+    bool temJard   = (jard.getEstaNoJardim() &&
+                        jard.getPosLin() == l &&
+                        jard.getPosCol() == c);
+
+    oss << "posicao " << lc_lin << lc_col
+        << " | solo: agua=" << b.getAgua()
+        << ", nutr=" << b.getNutri();
+
+    if (!temPlanta && !temFerr && !temJard) {
+        oss << " | vazia\n";
+        return oss.str();
+    }
+
+    if(temPlanta || temFerr || temJard){
+        // jardineiro
+        if (temJard)
+            oss << " | jardineiro: *";
+
+        // planta
+        if (temPlanta) {
+            const Planta* p = b.getPlanta();
+            oss << " | planta: tipo='" << p->Simbolo() << "'"
+                << ", agua=" << p->getAgua()
+                << ", nutr=" << p->getNutrientes()
+                << ", beleza=\"" << p->getBeleza() << "\"";
+            }
+
+        // ferramenta
+        if (temFerr) {
+            const Ferramenta* f = b.getFerramenta();
+            oss << " | ferramenta: tipo='" << f->getTipo() << "'";
+        }
+
+        oss << "\n";
+    }
+    return oss.str();
+}
+
+// se a pessoa definir raio [n], mostra info dos blocos com raio [n] a partir do bloco atual (l,c)
+std::string Jardim::listaAreaRaio(int l, int c, int n)const{
+    std::ostringstream oss;
+
+    // ja mostra a info na posicao atual (l,c) -> centro
+    oss << listaAreaIndicada(l,c);
+
+    for (int i = -n; i <= n ; ++i) {
+        for (int j = -n; j<=n ; ++j) {
+            // n queremos que i e j sejam 0, senao isso é o centro que já foi tratado antes
+            if (i == 0 && j == 0) continue;
+
+            int linNovaVizRaio = l+i;
+            int colNovaVizRaio = c+j;
+
+            // segurança: não sair fora do jardim
+            if (linNovaVizRaio < 0 || linNovaVizRaio >= dimLin ||
+                colNovaVizRaio < 0 || colNovaVizRaio >= dimCol)
+                continue;
+
+            oss << listaAreaIndicada(linNovaVizRaio,colNovaVizRaio);
+        }
+    }
+
+    return oss.str();
 }
 
 // apenas atribui a cada bloco(pos. jardim) as caracteristicas
