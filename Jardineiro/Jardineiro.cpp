@@ -4,6 +4,8 @@
 
 #include "Jardineiro.h"
 
+#include <algorithm>
+
 #include "Ferramentas/Ferramenta.h"
 #include "Ferramentas/Adubo/Adubo.h"
 #include "Ferramentas/Regador/Regador.h"

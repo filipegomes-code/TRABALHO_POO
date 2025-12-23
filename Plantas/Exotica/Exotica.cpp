@@ -2,16 +2,9 @@
 // Created by jpmre on 01/11/2025.
 //
 
+#include "Settings.h"
 #include "Exotica.h"
 
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
-
-#include "Exotica.h"
-#include "../../Settings.h"
-
-// ROSEIRA
 Exotica::Exotica() : Planta(Settings::Exotica::inicial_agua, Settings::Exotica::inicial_nutrientes, "Bonita")
 {}
 
@@ -20,7 +13,6 @@ void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
     if (agua <= Settings::Exotica::multiplica_agua_maior ||
         nutrientes <= Settings::Exotica::multiplica_nutrientes_maior)
         return;
-
 
     // 8 posicoes possiveis
     int dl[8] = {-1,-1,-1,0,0,1,1,1};
@@ -53,9 +45,7 @@ void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
 
             return;
         }
-
     }
-
 }
 
 void Exotica::Absorve(Bloco& b) {
@@ -65,11 +55,11 @@ void Exotica::Absorve(Bloco& b) {
     // absorve até 8 unidades de água do solo
     int absorveAgua = Settings::Exotica::absorcao_agua;
     // se n tiver mais que oq absorve, fica a 0
-    if(aguaSolo < absorveAgua){
+    if (aguaSolo < absorveAgua){
         absorveAgua = aguaSolo;
         b.setAgua(aguaSolo - absorveAgua);
         agua += absorveAgua;
-    }else{
+    } else {
         b.setAgua(aguaSolo - absorveAgua);
         agua += absorveAgua;
     }

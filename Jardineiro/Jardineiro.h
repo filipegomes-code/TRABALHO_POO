@@ -5,6 +5,7 @@
 #ifndef TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
 
+#include <string>
 #include <vector>
 #include "Settings.h"
 

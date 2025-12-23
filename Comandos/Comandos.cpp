@@ -7,370 +7,461 @@
 
 using namespace std;
 
-// --- Funçóes auxiliares de Validação ---
-/**
- *
- * @brief Tenta converter uma string para inteiro.
- * @return true se for um inteiro, false caso contrário.
- */
-bool strParaInt(const string& s, int& out) {
-    try {
-        size_t pos;
-        out = stoi(s, &pos); // este &pos guarda a posiçao do 1 caractere que n é um numero.
-        return pos == s.length();
-    } catch (...) {
-        return false;
+// UTILITÁRIOS (Namespace anónimo para funções auxiliares locais)
+namespace {
+    // converte uma string para inteiro - return true se for valido, false caso contrário
+    bool strParaInt(const string& s, int& out) {
+        try {
+            size_t pos;
+            out = stoi(s, &pos); // este &pos guarda a posição do 1 caractere que não é um número.
+            return pos == s.length();
+        } catch (...) {
+            return false;
+        }
     }
-}
 
-/**
- *
- * @brief Converte coordenadas "lc" para inteiros l e c.
- * @return true se o formato for válido, false caso contrário.
-*/
-bool strParaCoords(const string& s, int& l, int& c) {
-    if (s.length() != 2) {
-        return false;
-    }
-    l = s[0] - 'a'; // Converte 'a' -> 0, 'b' -> 1, ...
-    c = s[1] - 'a';
+    // Converte coordenadas "lc" para inteiros l e c (0-indexed) - true se válido, false caso contrário
+    bool strParaCoords(const string& s, int& l, int& c) {
+        if (s.length() != 2) {
+            return false;
+        }
+        l = s[0] - 'a'; // Converte 'a' -> 0, 'b' -> 1, ...
+        c = s[1] - 'a';
 
-    // Verifica se l e c estão dentro dos limites (0 - 25)
-    if (l < 0 || l >= 26 || c < 0 || c >= 26) {
-        return false;
-    }
-    return true;
-}
-
-/**
- * @brief Verifica se as coordenadas (l, c) estão dentro dos limites do jardim.
- * @return true se válidas, false caso contrário.
- */
-bool coordsValidas(int l, int c, const Jardim& x) {
-    return (l >= 0 && l < x.getDimLin() && c >= 0 && c < x.getDimCol());
-}
-
-/**
- * @brief Verifica se existem parâmetros extras na linha de comando.
- * @return true se houver lixo (erro), false se estiver tudo ok.
- */
-bool verificaLixo(istream& msg, const string& comando) {
-    string lixo;
-    if (msg >> lixo) {
-        cout << "Erro: comando '" << comando << "' tem parâmetros extra: '" << lixo << "'\n";
+        // Verifica se l e c estão dentro dos limites (0 - 25)
+        if (l < 0 || l >= 26 || c < 0 || c >= 26) {
+            return false;
+        }
         return true;
     }
-    return false;
+
+    // verifica se as coordenadas (l, c) estão dentro dos limites do jardim - true se válidas, false caso contrário
+    bool coordsValidas(int l, int c, const Jardim& x) {
+        return (l >= 0 && l < x.getDimLin() && c >= 0 && c < x.getDimCol());
+    }
 }
 
-bool Executa_Comandos(istream& msg, Jardim& x){
-    string comando;
-
-    if(!(msg >> comando)) return true; // se linha vazia ou EOF pa files
-
-    bool temJardim = x.existe(); // false se null, true se existir jardim
-    // só aceitamos 'jardim <L> <C>' ou 'executa <ficheiro>'
-    if (comando == cmd::JARDIM) {
-        if (temJardim) {
+// CLASSES DE COMANDOS CONCRETOS
+// --- JARDIM ---
+class CmdJardim : public Comando {
+public:
+    bool executar(Jardim& jardim, const vector<string>& args) override {
+        if (jardim.existe()) {
             cout << "Erro: já existe um jardim criado." << endl;
             return true;
         }
-        string p1, p2;
-        int L, C;
-        if (!(msg >> p1 >> p2)) {
-            cout << "Erro: Sintaxe incorreta. Uso: jardim <L> <C>" << endl;
+        if (args.size() != 2) {
+            cout << "Erro: Síntaxe incorreta. Uso: jardim <L> <C>" << endl;
             return true;
         }
-        if (!strParaInt(p1, L) || !strParaInt(p2, C)) { // se conseguir converter de string para int, é pq user realmente digitou numero.
-            cout << "Erro: Dimensoes devem ser numeros inteiros." << endl;
+
+        int l, c;
+        if (!strParaInt(args[0], l) || !strParaInt(args[1], c)) {
+            cout << "Erro: Dimensões devem ser números inteiros." << endl;
             return true;
         }
-        if (L < 1 || L > 26 || C < 1 || C > 26) {
+        if (l < 1 || l > 26 || c < 1 || c > 26) {
             cout << "Erro: Linhas e colunas devem estar entre 1 e 26." << endl;
             return true;
         }
-        if (verificaLixo(msg, "jardim <L> <C>")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'jardim " << L << " " << C << "' validado." << endl;
-        x.cria(L, C);
-        return true;
-    } else if (comando == cmd::EXECUTA) {
-        string file;
-        if (!(msg >> file)) {
-            cout << "Erro: Sintaxe incorreta. Uso: executa <nomeFicheiro>" << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "executa <nomeFicheiro>")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'executa " << file << "' validado." << endl;
-        ifstream f(file);
-        if (!f) {
-            cout << "Erro: Nao foi possivel abrir o ficheiro '" << file << "'." << endl;
-            return true;
-        }
-        string f1;
-        while (getline(f, f1)) {
-            if (f1.empty()) {
-                continue; // salta linhas vazias
-            }
-            cout << "> " << f1 << endl;
-            istringstream fline(f1);
-            if (!Executa_Comandos(fline, x)) {
-                return false; // encontrou 'fim' no ficheiro
-            }
-        }
-        cout << "[META 1] Fim do ficheiro '" << file << "'." << endl;
-        return true;
-    } else if (comando == cmd::FIM) {
-        if (verificaLixo(msg, "fim")) {
-            return true;
-        }
-        cout << "Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
-        x.destroi(); // -> deleta os blocos 1º dps o jardim todo
-        return false;
-    }
 
-    // --- A partir daqui todos os comandos exigem que o jardim já existe ---
-    if (!temJardim) {
-        cout << "Erro: O primeiro comando deve ser 'jardim <L> <C>' ou 'executa <nomeFicheiro>'" << endl;
+        jardim.cria(l, c);
+        cout << "Jardim " << l << "x" << c << " criado com sucesso." << endl;
         return true;
     }
+};
 
-    if (comando == cmd::AVANCA) {
-        string p1;
+// --- AVANCA ---
+class CmdAvanca : public Comando {
+public:
+    bool executar(Jardim& jardim, const vector<string>& args) override {
+        if (!jardim.existe()) {
+            cout << "Erro: Jardim não existe." << endl;
+            return true;
+        }
+
         int n = 1;
-        if (msg >> p1) {
-            if (!strParaInt(p1, n) || n <= 0) {
+        if (!args.empty()) {
+            if (args.size() > 1 || !strParaInt(args[0], n) || n <= 0) {
                 cout << "Erro: 'n' deve ser um inteiro positivo." << endl;
                 return true;
             }
         }
-        if (verificaLixo(msg, "avanca [n]")) {
-            return true;
+        if (jardim.avancar(n)) {
+            cout << "Avançou " << n << " instantes." << endl;
         }
-        if(x.avancar(n))
-            cout << "Avançou " << n << "' instantes." << endl;
-        return true;
-    } else if (comando == cmd::LPLANTAS) { // todas plantas existentes no jardim
-        if (verificaLixo(msg, "lplantas")) {
-            return true;
-        }
-        cout << x.listaAllPlantas();
-        return true;
-    } else if (comando == cmd::LPLANTA) {
-        string p1;
-        int l, c;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: lplanta <l><c>" << endl;
-            return true;
-        }
-        if (!strParaCoords(p1, l, c)) {
-            cout << "Erro: Coordenadas invalidas (ex: 'aa', 'ce')." << endl;
-            return true;
-        }
-        if (!coordsValidas(l, c, x)) {
-            cout << "Erro: Coordenadas fora dos limites do jardim." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "lplanta <l><c>")) {
-            return true;
-        }
-        cout << x.lista1Planta(l,c);
-        return true;
-    } else if (comando == cmd::LAREA) {
-        if (verificaLixo(msg, "larea")) {
-            return true;
-        }
-        cout << x.listaArea();
-        return true;
-    } else if (comando == cmd::LSOLO) {
-        string p1, p2;
-        int l, c, n = 0;
-        bool temN = false;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: lsolo <l><c> [n]" << endl;
-            return true;
-        }
-        if (!strParaCoords(p1, l, c)) {
-            cout << "Erro: Coordenadas invalidas (ex: 'aa', 'ce')." << endl;
-            return true;
-        }
-        if (!coordsValidas(l, c, x)) {
-            cout << "Erro: Coordenadas fora dos limites do jardim." << endl;
-            return true;
-        }
-        if (msg >> p2) {
-            temN = true;
-            if (!strParaInt(p2, n) || n < 0) {
-                cout << "Erro: 'n' (raio) deve ser um numero inteiro positivo ou zero.\n";
-                return true;
-            }
-        }
-        if (verificaLixo(msg, "lsolo <l><c> [n]")) {
-            return true;
-        }
-        if(!temN){
-            cout << x.listaAreaIndicada(l,c);
-            return true;
-        }
-        cout << x.listaAreaRaio(l,c,n);
-        return true;
-    } else if (comando == cmd::LFERR){
-        if (verificaLixo(msg, "lferr")) {
-            return true;
-        }
-        x.listFerrJardineiro();
-        return true;
-    } else if (comando == cmd::COLHE) {
-        string p1;
-        int l, c;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: colhe <l><c>" << endl;
-            return true;
-        }
-        if (!strParaCoords(p1, l, c)) {
-            cout << "Erro: Coordenadas invalidas (ex: 'aa', 'ce')." << endl;
-            return true;
-        }
-        if (!coordsValidas(l, c, x)) {
-            cout << "Erro: Coordenadas fora dos limites do jardim." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "colhe <l><c>")) {
-            return true;
-        }
-        if(x.colher(l,c))
-            cout << "planta foi colhida" << endl;
-        else
-            cout << "N existe planta para colher ou esgotou limite máximo" << endl;
-        x.mostra();
-        return true;
-    } else if (comando == cmd::PLANTA) {
-        string p1, p2;
-        int l, c;
-        if (!(msg >> p1 >> p2)) {
-            cout << "Erro: Sintaxe incorreta. Uso: planta <l><c> <tipo>" << endl;
-            return true;
-        }
-        if (!strParaCoords(p1, l, c)) {
-            cout << "Erro: Coordenadas invalidas (ex: 'aa', 'ce')." << endl;
-            return true;
-        }
-        if (!coordsValidas(l, c, x)) {
-            cout << "Erro: Coordenadas fora dos limites do jardim." << endl;
-            return true;
-        }
-        if (p2.length() != 1 || (p2[0] != 'c' && p2[0] != 'r' && p2[0] != 'e' && p2[0] != 'x')) {
-            cout << "Erro: Tipo de planta invalido. Use 'c', 'r', 'e' ou 'x'." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "planta <l><c> <tipo>")) {
-            return true;
-        }
-        char tipoPlanta = p2[0];
-        if(x.plantar(l,c,tipoPlanta))
-            cout << "Plantou planta do tipo: " + p2 << endl;
-        else
-            cout << "Já existe 1 planta nessa posicao ou limite máximo por turno atingido" << endl;
-        x.mostra();
-        return true;
-    } else if (comando == cmd::LARGA) {
-        if (verificaLixo(msg, "larga")) {
-            return true;
-        }
-        if(!x.largarFerrJardineiro()){
-            cout << "N tem ferramenta ativa, logo n consegue largar" << endl;
-            return true;
-        }
-        cout << "Largada ferramenta ativa" << endl;
-        return true;
-    } else if (comando == cmd::PEGA) {
-        string p1;
-        int n;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: pega <n>" << endl;
-            return true;
-        }
-        if (!strParaInt(p1, n) || n <= 0) {
-            cout << "Erro: 'n' (numero de serie) deve ser um inteiro positivo." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "pega <n>")) {
-            return true;
-        }
-        if(!x.pegarFerrJardineiro(n)){
-            cout << "N foi possivel pegar na ferramenta" << endl;
-            return true;
-        }
-        cout << "Ferramenta " << n << " agora está ativa.\n";
-        return true;
-    } else if (comando == cmd::COMPRA) {
-        string p1;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: compra <c>" << endl;
-            return true;
-        }
-        if (p1.length() != 1 || (p1[0] != 'g' && p1[0] != 'a' && p1[0] != 't' && p1[0] != 'z')) {
-            cout << "Erro: Tipo de ferramenta invalido. Use 'g', 'a', 't' ou 'z'." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "compra <c>")) {
-            return true;
-        }
-        char tipo = p1[0];
-        if(!x.comprarFerrJardineiro(tipo)){
-            cout << "N foi possivel comprar ferramenta do tipo: " << tipo << endl;
-            return true;
-        }
-        cout << "Jardineiro comprou ferramenta do tipo: " << tipo << endl;
-        return true;
-    } else if (comando == cmd::mov::ESQ || comando == cmd::mov::DIR || comando == cmd::mov::CIMA || comando == cmd::mov::BAIXO ) {
-        if (verificaLixo(msg, comando)) {
-            return true;
-        }
-        if(!x.moveJardineiro(comando))
-            cout << "jardineiro não está no jardim ou limite de movimentação atingido" << endl;
-        x.mostra();
-        cout << "[META 1] Comando" + comando + "validado." << endl;
-        return true;
-    } else if (comando == cmd::ENTRA) {
-        string p1;
-        int l, c;
-        if (!(msg >> p1)) {
-            cout << "Erro: Sintaxe incorreta. Uso: entra <l><c>" << endl;
-            return true;
-        }
-        if (!strParaCoords(p1, l, c)) {
-            cout << "Erro: Coordenadas invalidas (ex: 'aa', 'ce')." << endl;
-            return true;
-        }
-        if (!coordsValidas(l, c, x)) {
-            cout << "Erro: Coordenadas fora dos limites do jardim." << endl;
-            return true;
-        }
-        if (verificaLixo(msg, "entra <l><c>")) {
-            return true;
-        }
-        if(x.entraJardineiro(l,c)){
-           cout << "Jardineiro entrou no Jardim" << endl;
-           x.mostra();
-        }else
-            cout << "jardineiro já existe no jardim ou não pode voltar a entrar" << endl;
-        return true;
-    } else if (comando == cmd::SAI) {
-        if (verificaLixo(msg, "sai")) {
-            return true;
-        }
-        if(x.saiJardineiro())
-            cout << "Jardineiro saiu do jardim" << endl;
-        else
-            cout << "Jardineiro n pode sair (limite do turno atingido ou n está no jardim)" << endl;
-        x.mostra();
-        return true;
-    } else {
-        cout << "Erro: Comando '" << comando << "' desconhecido." << endl;
         return true;
     }
+};
+
+// --- FIM ---
+class CmdFim : public Comando {
+public:
+    bool executar(Jardim &jardim, const vector<string> &args) override {
+        if (!args.empty()) {
+            cout << "Erro: 'fim' não aceita argumentos." << endl;
+            return true;
+        }
+        cout << "A terminar simulação..." << endl;
+        jardim.destroi();
+        return false;
+    }
+};
+
+// --- EXECUTA (FICHEIROS) ---
+class CmdExecuta : public Comando {
+public:
+    bool executar(Jardim &jardim, const vector<string> &args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: executa <nome_ficheiro>" << endl;
+            return true;
+        }
+        ifstream f(args[0]);
+        if (!f) {
+            cout << "Erro: Não abriu ficheiro '" << args[0] << "'" << endl;
+            return true;
+        }
+        cout << "--- Início execução ficheiro: " << args[0] << " ---" << endl;
+        // Chama o processador principal passando o ficheiro como stream - Recursivo
+        if (!ProcessarComandos(f, jardim)) {
+            return false; // se encontrar o comando 'fim' dentro do ficheiro, propaga o false
+        }
+        cout << "--- Fim execução ficheiro: " << args[0] << " ---" << endl;
+        return true;
+    }
+};
+
+// --- COMANDOS DE LISTAGEM ---
+class CmdLPlantas : public Comando {
+public:
+    bool executar(Jardim& jardim, const vector<string>& args) override {
+        if (!args.empty()) {
+            cout << "Erro: lplantas não aceita argumentos." << endl;
+            return true;
+        }
+        cout << jardim.listaAllPlantas();
+        return true;
+    }
+};
+
+class CmdLArea : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (!args.empty()) {
+            cout << "Erro: larea não aceita argumentos." << endl;
+            return true;
+        }
+        cout << j.listaArea();
+        return true;
+    }
+};
+
+class CmdLFerr : public Comando {
+public:
+    bool executar(Jardim &jardim, const vector<string> &args) override {
+        if (!args.empty()) {
+            cout << "Erro: lferr não aceita argumentos." << endl;
+            return true;
+        }
+        jardim.listFerrJardineiro();
+        return true;
+    }
+};
+
+class CmdLPlanta : public Comando {
+public:
+    bool executar(Jardim& jardim, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: lplanta <l><c>" << endl;
+            return true;
+        }
+        int l, c;
+        if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, jardim)) {
+            cout << "Erro: Coordenadas inválidas." << endl;
+            return true;
+        }
+        cout << jardim.lista1Planta(l, c);
+        return true;
+    }
+};
+
+class CmdLSolo : public Comando {
+public:
+    bool executar(Jardim& j, const vector <string>& args) override {
+        if (args.size() < 1 || args.size() > 2) {
+            cout << "Erro: Uso: lsolo <l><c> [n]" << endl;
+            return true;
+        }
+        int l, c;
+        if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
+            cout << "Erro: Coordenadas inválidas." << endl;
+            return true;
+        }
+
+        if (args.size() == 2) {
+            int n;
+            if (!strParaInt(args[1], n) || n < 0) {
+                cout << "Erro: raio deve ser inteiro >= 0." << endl;
+                return true;
+            }
+            cout << j.listaAreaRaio(l, c, n);
+        } else {
+            cout << j.listaAreaIndicada(l, c);
+        }
+        return true;
+    }
+};
+
+// --- AÇÕES DO JARDINEIRO ---
+class CmdColhe : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: colhe <l><c>" << endl;
+            return true;
+        }
+        int l, c;
+        if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
+            cout << "Erro: Coordenadas inválidas." << endl;
+            return true;
+        }
+        if (j.colher(l, c)) {
+            cout << "Planta colhida." << endl;
+        } else {
+            cout << "Não foi possível colher (vazio ou limite atingido)." << endl;
+        }
+        j.mostra();
+        return true;
+    }
+};
+
+class CmdPlanta : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (args.size() != 2) {
+            cout << "Erro: Uso: planta <l><c> <tipo>" << endl;
+            return true;
+        }
+        int l, c;
+        if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
+            cout << "Erro: Coordenadas inválidas." << endl;
+            return true;
+        }
+
+        string tipoStr = args[1];
+        if (tipoStr.length() != 1) {
+            cout << "Erro: Tipo deve ser 1 caracter." << endl;
+            return true;
+        }
+        char tipo = tolower(tipoStr[0]);
+        if (tipo != 'c' && tipo != 'r' && tipo != 'e' && tipo != 'x') {
+            cout << "Erro: Tipo inválido (c, r, e, x)." << endl;
+            return true;
+        }
+
+        if (j.plantar(l, c, tipo)) {
+            cout << "Plantou " << tipo << "." << endl;
+        } else {
+            cout << "Não foi possível plantar (ocupado ou limite atingido." << endl;
+        }
+        j.mostra();
+        return true;
+    }
+};
+
+class CmdLarga : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (!args.empty()) {
+            cout << "Erro: larga não aceita argumentos." << endl;
+            return true;
+        }
+        if (j.largarFerrJardineiro()) {
+            cout << "Ferramenta largada." << endl;
+        } else {
+            cout << "Não tem ferramenta na mão." << endl;
+        }
+        return true;
+    }
+};
+
+class CmdPega : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: pega <id>" << endl;
+            return true;
+        }
+        int id;
+        if (!strParaInt(args[0], id) || id <= 0) {
+            cout << "Erro: ID deve ser inteiro positivo." << endl;
+            return true;
+        }
+        if (j.pegarFerrJardineiro(id)) {
+            cout << "Pegou na ferramenta " << id << "." << endl;
+        } else {
+            cout << "Ferramenta não encontrada na mochila." << endl;
+        }
+        return true;
+    }
+};
+
+class CmdCompra : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: compra <tipo>" << endl;
+            return true;
+        }
+        string t = args[0];
+        if (t.length() != 1) {
+            cout << "Erro: Tipo deve ser 1 caracter." << endl;
+            return true;
+        }
+        char tipo = tolower(t[0]);
+        if (tipo != 'g' && tipo != 'a' && tipo != 't' && tipo != 'z') {
+            cout << "Erro: Tipo inválido (g, a, t, z)." << endl;
+            return true;
+        }
+
+        if (j.comprarFerrJardineiro(tipo)) {
+            cout << "Comprou ferramenta " << tipo << "." << endl;
+        } else {
+            cout << "Não foi possível comprar." << endl;
+        }
+        return true;
+    }
+};
+
+// --- MOVIMENTO E ESTADO DO JARDINEIRO ---
+class CmdEntra : public Comando {
+public:
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: entra <l><c>" << endl;
+            return true;
+        }
+        int l, c;
+        if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
+            cout << "Erro: Coordenadas inválidas." << endl;
+            return true;
+        }
+        if (j.entraJardineiro(l, c)) {
+            cout << "Jardineiro entrou em " << args[0] << "." << endl;
+            j.mostra();
+        } else {
+            cout << "Não foi possível entrar (já dentro ou limite atingido)." << endl;
+        }
+        return true;
+    }
+};
+
+class CmdSai : public Comando {
+public:
+    bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
+        if (!args.empty()) {
+            cout << "Erro: sai não aceita argumentos." << endl;
+            return true;
+        }
+        if (jardim.saiJardineiro()) {
+            cout << "Jardineiro saiu do jardim." << endl;
+            jardim.mostra();
+        } else {
+            cout << "Não pode sair (não está no jardim ou limite atingido)." << endl;
+        }
+        return true;
+    }
+};
+
+// Classe genérica para movimento (E, D, C, B)
+class CmdMovimento : public Comando {
+public:
+    CmdMovimento(string dir) : direcao(dir) {}
+
+    bool executar(Jardim& j, const vector<string>& args) override {
+        if (!args.empty()) {
+            cout << "Erro: movimento não aceita argumentos." << endl;
+            return true;
+        }
+        if (j.moveJardineiro(direcao)) {
+            cout << "Moveu-se para: " << direcao << endl;
+            j.mostra();
+        } else {
+            cout << "Não pode mover (fora limites, não está no jardim ou sem movimentos)." << endl;
+        }
+        return true;
+    }
+private:
+    string direcao;
+};
+
+// FACTORY IMPLEMENTATION
+std::unique_ptr<Comando> ComandoFactory::criar(const string &nome) {
+    if (nome == cmd_keys::JARDIM) return make_unique<CmdJardim>();
+    if (nome == cmd_keys::AVANCA) return make_unique<CmdAvanca>();
+    if (nome == cmd_keys::FIM) return make_unique<CmdFim>();
+    if (nome == cmd_keys::EXECUTA) return make_unique<CmdExecuta>();
+
+    // Listagens
+    if (nome == cmd_keys::LPLANTAS) return make_unique<CmdLPlantas>();
+    if (nome == cmd_keys::LPLANTA) return make_unique<CmdLPlanta>();
+    if (nome == cmd_keys::LAREA) return make_unique<CmdLArea>();
+    if (nome == cmd_keys::LSOLO) return make_unique<CmdLSolo>();
+    if (nome == cmd_keys::LFERR) return make_unique<CmdLFerr>();
+
+    // Ações
+    if (nome == cmd_keys::COLHE) return make_unique<CmdColhe>();
+    if (nome == cmd_keys::PLANTA) return make_unique<CmdPlanta>();
+    if (nome == cmd_keys::LARGA) return make_unique<CmdLarga>();
+    if (nome == cmd_keys::PEGA) return make_unique<CmdPega>();
+    if (nome == cmd_keys::COMPRA) return make_unique<CmdCompra>();
+
+    // Jardineiro
+    if (nome == cmd_keys::ENTRA) return make_unique<CmdEntra>();
+    if (nome == cmd_keys::SAI) return make_unique<CmdSai>();
+
+    // Movimento
+    if (nome == cmd_keys::ESQ) return make_unique<CmdMovimento>(string(cmd_keys::ESQ));
+    if (nome == cmd_keys::DIR) return make_unique<CmdMovimento>(string(cmd_keys::DIR));
+    if (nome == cmd_keys::CIMA) return make_unique<CmdMovimento>(string(cmd_keys::CIMA));
+    if (nome == cmd_keys::BAIXO) return make_unique<CmdMovimento>(string(cmd_keys::BAIXO));
+
+    return nullptr;
+}
+
+// PROCESSAR COMANDOS
+bool ProcessarComandos(istream& in, Jardim& jardim) {
+    string linha;
+    while (getline(in, linha)) {
+        if (linha.empty()) {
+            continue;
+        }
+
+        istringstream iss(linha);
+        string nomeCmd;
+        if (!(iss >> nomeCmd)) {
+            continue;
+        }
+
+        vector<string> args;
+        string arg;
+        while (iss >> arg) {
+            args.push_back(arg);
+        }
+
+        if (!jardim.existe() && nomeCmd != cmd_keys::JARDIM && nomeCmd != cmd_keys::EXECUTA && nomeCmd != cmd_keys::FIM) {
+            cout << "Erro: O primeiro comando deve ser 'jardim' ou 'executa'." << endl;
+            continue;
+        }
+
+        auto cmd = ComandoFactory::criar(nomeCmd);
+        if (cmd) {
+            if (!cmd->executar(jardim, args)) {
+                return false;
+            }
+        } else {
+            cout << "Erro: Comando desconhecido '" << nomeCmd << "'" << endl;
+        }
+    }
+    return true;
 }
