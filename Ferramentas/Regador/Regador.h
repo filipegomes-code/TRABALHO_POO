@@ -10,9 +10,14 @@
 class Regador : public Ferramenta {
 public:
     Regador();
+
+    Ferramenta* duplicar() const override;
+
     bool aplicaEfeito(Bloco& b) override;
-    char getTipo() const override {return 'g';}
+
+    char getTipo() const override { return 'g'; }
     std::string getDescricao() const override;
+
 private:
     int capacidadeAgua;
 };

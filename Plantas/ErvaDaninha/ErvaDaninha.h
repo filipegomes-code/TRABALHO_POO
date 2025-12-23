@@ -8,6 +8,19 @@
 #include "Plantas/Planta.h"
 
 class ErvaDaninha : public Planta{
+public:
+    ErvaDaninha();
+    ~ErvaDaninha() override;
+
+    Planta* duplicar() const override;
+
+    char Simbolo()const override {return 'e';}
+    bool passo(Jardim& j, int l, int c, Bloco& b) override;
+
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
+
 private:
     int idade = 0;              // instantes de vida (morre aos 60)
     int instantesDesdeMult = 0; // instantes desde a última multiplicação
@@ -15,18 +28,6 @@ private:
 
     // helpers privados
     void tentaMultiplicar(Jardim& j, int l, int c);
-
-protected:
-    void Absorve(Bloco& b) override;
-    bool CheckMorte() override;
-
-public:
-    ErvaDaninha();
-    ~ErvaDaninha() override;
-
-    char Simbolo()const override {return 'e';}
-    bool passo(Jardim& j, int l, int c, Bloco& b) override;
-
 };
 
 

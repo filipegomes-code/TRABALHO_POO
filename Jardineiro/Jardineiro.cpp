@@ -16,6 +16,44 @@ Jardineiro::~Jardineiro() {
     limparInventario();
 }
 
+Jardineiro::Jardineiro(const Jardineiro &outro) {
+    *this = outro;
+}
+
+Jardineiro & Jardineiro::operator=(const Jardineiro &outro) {
+    if (this == &outro) return *this;
+
+    limparInventario();
+
+    posLin = outro.posLin;
+    posCol = outro.posCol;
+    estaNoJardim = outro.estaNoJardim;
+    movimentosRestantes = outro.movimentosRestantes;
+    plantacoesRestantes = outro.plantacoesRestantes;
+    colheitasRestantes = outro.colheitasRestantes;
+    entradasSaidasRestantes = outro.entradasSaidasRestantes;
+
+    int indiceAtiva = -1;
+
+    for (int i = 0; i < outro.inventario.size(); ++i) {
+        if (outro.inventario[i] == outro.ferramentaAtiva) {
+            indiceAtiva = i;
+        }
+
+        if (outro.inventario[i] != nullptr) {
+            inventario.push_back(outro.inventario[i]->duplicar());
+        }
+    }
+
+    if (indiceAtiva != -1 && indiceAtiva < inventario.size()) {
+        ferramentaAtiva = inventario[indiceAtiva];
+    } else {
+        ferramentaAtiva = nullptr;
+    }
+
+    return *this;
+}
+
 void Jardineiro::limparInventario() {
     for(Ferramenta* f : inventario)
         delete f;

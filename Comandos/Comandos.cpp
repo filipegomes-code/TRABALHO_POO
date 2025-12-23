@@ -395,6 +395,58 @@ private:
     string direcao;
 };
 
+// --- COMANDOS DE PERSISTÊNCIA ---
+class CmdGrava : public Comando {
+public:
+    bool executar(Jardim& jardim, const vector<string>& args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: grava <nome>" << endl;
+            return true;
+        }
+
+        if (Jardim::salvarJogo(args[0], jardim)) {
+            cout << "Jogo gravado com sucesso com o nome '" << args[0] << "'." << endl;
+        } else {
+            cout << "Erro ao gravar (Jardim não existe ou erro de memória)." << endl;
+        }
+        return true;
+    }
+};
+
+class CmdRecupera : public Comando {
+public:
+    bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: recupera <nome>" << endl;
+            return true;
+        }
+
+        if (Jardim::recuperarJogo(args[0], jardim)) {
+            cout << "Jogo '" << args[0] << "' recuperado com sucesso." << endl;
+        } else {
+            cout << "Erro: Save com o nome '" << args[0] << "' não encontrado." << endl;
+        }
+        return true;
+    }
+};
+
+class CmdApaga : public Comando {
+public:
+    bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
+        if (args.size() != 1) {
+            cout << "Erro: Uso: apaga <nome>" << endl;
+            return true;
+        }
+
+        if (Jardim::apagarJogo(args[0])) {
+            cout << "Save '" << args[0] << "' apagado da memória." << endl;
+        } else {
+            cout << "Erro: Save não encontrado." << endl;
+        }
+        return true;
+    }
+};
+
 // FACTORY IMPLEMENTATION
 std::unique_ptr<Comando> ComandoFactory::criar(const string &nome) {
     if (nome == cmd_keys::JARDIM) return make_unique<CmdJardim>();
@@ -425,6 +477,11 @@ std::unique_ptr<Comando> ComandoFactory::criar(const string &nome) {
     if (nome == cmd_keys::DIR) return make_unique<CmdMovimento>(string(cmd_keys::DIR));
     if (nome == cmd_keys::CIMA) return make_unique<CmdMovimento>(string(cmd_keys::CIMA));
     if (nome == cmd_keys::BAIXO) return make_unique<CmdMovimento>(string(cmd_keys::BAIXO));
+
+    // Persistência
+    if (nome == cmd_keys::GRAVA) return make_unique<CmdGrava>();
+    if (nome == cmd_keys::RECUPERA) return make_unique<CmdRecupera>();
+    if (nome == cmd_keys::APAGA) return make_unique<CmdApaga>();
 
     return nullptr;
 }

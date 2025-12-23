@@ -1,7 +1,4 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-
 #include "Jardim.h"
 #include "../Settings.h"
 #include <sstream>
@@ -16,6 +13,8 @@
 #include "Plantas/Exotica/Exotica.h"
 
 using namespace std;
+
+map<string, Jardim> Jardim::salvaguardas;
 
 Bloco::Bloco()
         : planta(nullptr), ferr(nullptr), agua(0), nutri(0) {}
@@ -67,8 +66,70 @@ Jardim::Jardim(int linhas, int colunas)
     cria(linhas, colunas);
 }
 
+Jardim::Jardim(const Jardim &outro) : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {
+    *this = outro;
+}
+
+Jardim & Jardim::operator=(const Jardim &outro) {
+    if (this == &outro) return *this;
+
+    destroi();
+
+    if (!outro.existe()) return *this;
+
+    dimLin = outro.dimLin;
+    dimCol = outro.dimCol;
+    tamJardim = outro.tamJardim;
+
+    solo = new Bloco[tamJardim];
+
+    for (int i = 0; i < tamJardim; ++i) {
+        solo[i].setAgua(outro.solo[i].getAgua());
+        solo[i].setNutri(outro.solo[i].getNutri());
+
+        if (outro.solo[i].getPlanta() != nullptr) {
+            solo[i].setPlanta(outro.solo[i].getPlanta()->duplicar());
+        } else {
+            solo[i].setPlanta(nullptr);
+        }
+
+        if (outro.solo[i].getFerramenta() != nullptr) {
+            solo[i].setFerramenta(outro.solo[i].getFerramenta()->duplicar());
+        } else {
+            solo[i].setFerramenta(nullptr);
+        }
+    }
+
+    jard = outro.jard;
+
+    return *this;
+}
+
 Jardim::~Jardim() {
     destroi();
+}
+
+bool Jardim::salvarJogo(const std::string &nome, const Jardim &atual) {
+    if (!atual.existe()) return false;
+
+    salvaguardas[nome] = atual;
+    return true;
+}
+
+bool Jardim::recuperarJogo(const std::string &nome, Jardim &atual) {
+    auto it = salvaguardas.find(nome);
+    if (it == salvaguardas.end()) {
+        return false;
+    }
+
+    atual = it->second;
+
+    atual.mostra();
+    return true;
+}
+
+bool Jardim::apagarJogo(const std::string &nome) {
+    return salvaguardas.erase(nome) > 0;
 }
 
 bool Jardim::existe() const {

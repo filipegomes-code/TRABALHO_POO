@@ -8,6 +8,10 @@
 
 Tesoura::Tesoura() : Ferramenta() {}
 
+Ferramenta * Tesoura::duplicar() const {
+    return new Tesoura(*this);
+}
+
 bool Tesoura::aplicaEfeito(Bloco& b) {
     Planta* p = b.getPlanta();
     if (!p)

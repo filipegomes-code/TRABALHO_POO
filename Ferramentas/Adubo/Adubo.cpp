@@ -9,6 +9,10 @@
 Adubo::Adubo()
         : Ferramenta(), capacidadeAdubo(Settings::Adubo::capacidade) {}
 
+Ferramenta * Adubo::duplicar() const {
+    return new Adubo(*this);
+}
+
 bool Adubo::aplicaEfeito(Bloco& b) {
     if (capacidadeAdubo <= 0)
         return false;

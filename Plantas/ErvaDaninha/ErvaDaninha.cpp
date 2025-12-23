@@ -10,6 +10,10 @@ ErvaDaninha::ErvaDaninha() : Planta(Settings::ErvaDaninha::inicial_nutrientes, S
 
 ErvaDaninha::~ErvaDaninha()=default;
 
+Planta * ErvaDaninha::duplicar() const {
+    return new ErvaDaninha(*this);
+}
+
 // 3) Multiplicação: tenta encontrar vizinho vazio e criar novo cacto metade/metade
 void ErvaDaninha::tentaMultiplicar(Jardim& j, int l, int c) {
     if (nutrientes <= Settings::ErvaDaninha::multiplica_nutrientes_maior || instantesDesdeMult < Settings::ErvaDaninha::multiplica_instantes)

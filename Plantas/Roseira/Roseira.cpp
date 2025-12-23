@@ -6,8 +6,11 @@
 #include "../../Settings.h"
 
 // ROSEIRA
-Roseira::Roseira() : Planta(Settings::Roseira::inicial_agua, Settings::Roseira::inicial_nutrientes, "Bonita")
-{}
+Roseira::Roseira() : Planta(Settings::Roseira::inicial_agua, Settings::Roseira::inicial_nutrientes, "Bonita") {}
+
+Planta * Roseira::duplicar() const {
+    return new Roseira(*this);
+}
 
 // 3) Multiplicação: tenta encontrar vizinho vazio e criar novo cacto metade/metade
 void Roseira::tentaMultiplicar(Jardim& j, int l, int c) {
@@ -43,9 +46,7 @@ void Roseira::tentaMultiplicar(Jardim& j, int l, int c) {
 
             return;
         }
-
     }
-
 }
 
 // verifica se TODAS as posições vizinhas imediatas têm planta
@@ -121,7 +122,6 @@ bool Roseira::CheckMorte(){
     // 3) nutrientes acumulados atingem 200
     if (nutrientes >= Settings::Roseira::morre_nutrientes_maior)
         return true;
-
 
     return false;
 }

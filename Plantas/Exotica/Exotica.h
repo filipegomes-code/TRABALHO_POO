@@ -8,22 +8,23 @@
 
 
 class Exotica : public Planta {
-private:
-    int instantesSoloSeco = 0;
-
-    void tentaMultiplicar(Jardim& j, int l, int c);
-protected:
-    void Absorve(Bloco& b) override;
-    bool CheckMorte() override;
-
 public:
     Exotica();
     ~Exotica() override = default;
 
-    char Simbolo() const override { return 'x';}
+    Planta* duplicar() const override;
+
+    char Simbolo() const override { return 'x'; }
     bool passo(Jardim& j, int l, int c, Bloco& b) override;
 
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
 
+private:
+    int instantesSoloSeco = 0;
+
+    void tentaMultiplicar(Jardim& j, int l, int c);
 };
 
 

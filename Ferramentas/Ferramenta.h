@@ -15,14 +15,18 @@ public:
     Ferramenta(char c);
     virtual ~Ferramenta() = default;
 
+    virtual Ferramenta* duplicar() const = 0;
+
     virtual bool aplicaEfeito(Bloco& b) = 0;
 
     int getNumSerie() const { return numSerie; }
     virtual char getTipo() const = 0;
 
     virtual std::string getDescricao() const = 0;
+
 private:
     static int contadorNumSerie; // contar estático para atribuir números de série únicos
+
 protected:
     int numSerie; // número de série de cada ferramenta
 };

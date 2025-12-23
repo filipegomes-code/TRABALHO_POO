@@ -9,6 +9,10 @@
 Regador::Regador()
         : Ferramenta(), capacidadeAgua(Settings::Regador::capacidade) {}
 
+Ferramenta * Regador::duplicar() const {
+    return new Regador(*this);
+}
+
 bool Regador::aplicaEfeito(Bloco& b) {
     if (capacidadeAgua <= 0)
         return false;

@@ -32,6 +32,11 @@ namespace cmd_keys {
     constexpr std::string_view DIR = "d";
     constexpr std::string_view CIMA = "c";
     constexpr std::string_view BAIXO = "b";
+
+    // Persistência
+    constexpr std::string_view GRAVA = "grava";
+    constexpr std::string_view RECUPERA = "recupera";
+    constexpr std::string_view APAGA = "apaga";
 }
 
 // --- Interface Comando ---

@@ -1,13 +1,22 @@
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
-
 #ifndef TRABALHO_CACTO_H
 #define TRABALHO_CACTO_H
 
 #include "Plantas/Planta.h"
 
-class Cacto : public Planta{
+class Cacto : public Planta {
+public:
+    Cacto();
+    ~Cacto() override;
+
+    Planta* duplicar() const override;
+
+    char Simbolo() const override { return 'c'; }
+    bool passo(Jardim& j, int l, int c, Bloco& b) override;
+
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
+
 private:
     int contaAguaAlta = 0;
     int contaSemNutrientes = 0;
@@ -16,20 +25,6 @@ private:
 
     // helpers privados para multiplicação
     void tentaMultiplicar(Jardim& j, int l, int c);
-
-protected:
-    void Absorve(Bloco& b) override;
-    bool CheckMorte() override;
-
-public:
-    Cacto();
-    ~Cacto() override;
-
-    char Simbolo()const override {return 'c';}
-    bool passo(Jardim& j, int l, int c, Bloco& b) override;
-
 };
-
-
 
 #endif //TRABALHO_CACTO_H

@@ -6,6 +6,10 @@
 #include "Settings.h"
 #include "Jardim/Jardim.h"
 
+Ferramenta * FerramentaZ::duplicar() const {
+    return new FerramentaZ(*this);
+}
+
 bool FerramentaZ::aplicaEfeito(Bloco& b) {
     // Se já não tiver cargas suficientes para um uso completo, está “morta”
     if (cargasRestantes < Settings::FerramentaZ::custo_por_uso)

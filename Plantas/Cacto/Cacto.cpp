@@ -11,6 +11,10 @@ Cacto::Cacto() : Planta(0,0, "neutra"){}
 
 Cacto::~Cacto(){}
 
+Planta * Cacto::duplicar() const {
+    return new Cacto(*this);
+}
+
 // 3) Multiplicação: tenta encontrar vizinho vazio e criar novo cacto metade/metade
 void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
     if (nutrientes <= Settings::Cacto::multiplica_nutrientes_maior || agua <= Settings::Cacto::multiplica_agua_maior)

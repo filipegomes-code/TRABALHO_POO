@@ -8,6 +8,20 @@
 #include "Plantas/Planta.h"
 
 class Roseira : public Planta{
+
+public:
+    Roseira();
+    ~Roseira() override = default; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
+
+    Planta* duplicar() const override;
+
+    char Simbolo() const override { return 'r';}
+    bool passo(Jardim& j, int l, int c, Bloco& b) override;
+
+protected:
+    void Absorve(Bloco& b) override;
+    bool CheckMorte() override;
+
 private:
     int aguaAbsVida = 0;
     int nutrAbsVida = 0;
@@ -15,18 +29,6 @@ private:
 
     bool vizinhosTodosComPlanta(const Jardim& j, int l, int c) const;
     void tentaMultiplicar(Jardim& j, int l, int c);
-
-protected:
-    void Absorve(Bloco& b) override;
-    bool CheckMorte() override;
-
-public:
-    Roseira();
-    ~Roseira() override=default; // tem se que dar override para destruir o objeto da class roseira, senao apenas destroi da classe base
-
-    char Simbolo() const override { return 'r';}
-    bool passo(Jardim& j, int l, int c, Bloco& b) override;
-
 };
 
 

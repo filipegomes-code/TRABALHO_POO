@@ -8,6 +8,10 @@
 Exotica::Exotica() : Planta(Settings::Exotica::inicial_agua, Settings::Exotica::inicial_nutrientes, "Bonita")
 {}
 
+Planta * Exotica::duplicar() const {
+    return new Exotica(*this);
+}
+
 void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
     // Condição interna: água > 40 e nutrientes > 30
     if (agua <= Settings::Exotica::multiplica_agua_maior ||

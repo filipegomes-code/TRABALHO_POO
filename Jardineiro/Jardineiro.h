@@ -12,6 +12,46 @@
 class Ferramenta;
 
 class Jardineiro {
+public:
+    Jardineiro() = default;
+    ~Jardineiro();
+
+    Jardineiro(const Jardineiro& outro);
+    Jardineiro& operator=(const Jardineiro& outro);
+
+    static char getSimbolo() { return '*'; }
+    bool sair();
+    bool entrar(int l, int c);
+    bool podeMover() const { return movimentosRestantes; }
+    bool atualizaPos(int l, int c);
+
+    bool pegarFerramenta(int numSerie);
+    bool largarFerramenta();
+    bool comprarFerramenta(char tipo);
+    void FerrDestruida();
+    bool podePlantar() const;
+    void registaPlantacao();
+    bool podeColher() const;
+    void registaColheita();
+
+    // apanha a ferramenta de uma posição e adiciona ao inventário
+    void apanharFerramenta(Ferramenta* f);
+
+    // aquando da mudança de instante, reinicia os contadores de ações
+    void reiniciaContadores();
+
+    // devolve se o jardineiro está ou não no jardim
+    bool getEstaNoJardim() const { return estaNoJardim; }
+
+    int getPosLin() const { return posLin; }
+    int getPosCol() const { return posCol; }
+
+    // devolve a ferramenta ativa (na mão) do jardineiro
+    Ferramenta* getFerramentaAtiva() const { return ferramentaAtiva; }
+
+    // lista as ferramentas no inventario (vetor) do jardineiro
+    std::vector<std::string> listarFerramentas() const;
+
 private:
     int posLin = -1, posCol=-1;
     bool estaNoJardim = false;
@@ -25,42 +65,6 @@ private:
     int entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 
     void limparInventario();
-
-public:
-    Jardineiro()=default;
-    ~Jardineiro();
-
-    static char getSimbolo() {return '*';}
-    bool sair();
-    bool entrar(int l, int c);
-    bool podeMover() const {return movimentosRestantes;}
-    bool atualizaPos(int l, int c);
-
-    bool pegarFerramenta(int numSerie);
-    bool largarFerramenta();
-    bool comprarFerramenta(char tipo);
-    void FerrDestruida();
-    bool podePlantar() const;
-    void registaPlantacao();
-    bool podeColher() const;
-    void registaColheita();
-
-
-    // apanha a ferramenta de uma posição e adiciona ao inventário
-    void apanharFerramenta(Ferramenta* f);
-
-    // aquando da mudança de instante, reinicia os contadores de ações
-    void reiniciaContadores();
-
-    // devolve se o jardineiro está ou não no jardim
-    bool getEstaNoJardim() const { return estaNoJardim; }
-    int getPosLin() const { return posLin; }
-    int getPosCol() const { return posCol; }
-    // devolve a ferramenta ativa (na mão) do jardineiro
-    Ferramenta* getFerramentaAtiva() const { return ferramentaAtiva; }
-
-    // lista as ferramentas no inventario (vetor) do jardineiro
-    std::vector<std::string> listarFerramentas() const;
 };
 
 
