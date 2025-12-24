@@ -1,32 +1,28 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #include "Settings.h"
 #include "Exotica.h"
 
-Exotica::Exotica() : Planta(Settings::Exotica::inicial_agua, Settings::Exotica::inicial_nutrientes, "Bonita")
-{}
+using namespace std;
 
-Planta * Exotica::duplicar() const {
+Exotica::Exotica() : Planta(Settings::Exotica::inicial_agua, Settings::Exotica::inicial_nutrientes, "Bonita") {
+}
+
+Planta *Exotica::duplicar() const {
     return new Exotica(*this);
 }
 
-void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
+void Exotica::tentaMultiplicar(Jardim &j, int l, int c) {
     // Condição interna: água > 40 e nutrientes > 30
     if (agua <= Settings::Exotica::multiplica_agua_maior ||
         nutrientes <= Settings::Exotica::multiplica_nutrientes_maior)
         return;
 
-    // 8 posicoes possiveis
-    int dl[8] = {-1,-1,-1,0,0,1,1,1};
-    int dc[8] = {-1,0,1,-1,1,-1,0,1};
-
-    // cria aleatoriedade na escolha do vizinho, o cacto n tem isso.
-    int start = rand() % 8;
+    // cria aleatoriedade na escolha do vizinho, o cato não tem isso.
+    int start = rand() % 8; // NOLINT(cert-msc50-cpp)
 
     // vê vizinhos nas diagonais
     for (int k = 0; k < 8; ++k) {
+        int dc[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+        int dl[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
         int idx = (start + k) % 8; // faz wrap
 
         int nl = l + dl[idx];
@@ -35,10 +31,10 @@ void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
         if (nl < 0 || nl >= j.getDimLin() || nc < 0 || nc >= j.getDimCol())
             continue;
 
-        Bloco& viz = j.getBloco(nl, nc);
+        Bloco &viz = j.getBloco(nl, nc);
 
         if (viz.getPlanta() == nullptr) {
-            auto* clone = new Exotica();
+            auto *clone = new Exotica();
             clone->nutrientes = Settings::Exotica::nova_nutrientes;
             clone->agua = Settings::Exotica::nova_agua;
 
@@ -52,14 +48,14 @@ void Exotica::tentaMultiplicar(Jardim& j, int l, int c) {
     }
 }
 
-void Exotica::Absorve(Bloco& b) {
+void Exotica::Absorve(Bloco &b) {
     int aguaSolo = b.getAgua();
     int nutrSolo = b.getNutri();
 
     // absorve até 8 unidades de água do solo
     int absorveAgua = Settings::Exotica::absorcao_agua;
-    // se n tiver mais que oq absorve, fica a 0
-    if (aguaSolo < absorveAgua){
+    // se não tiver mais que o que absorve, fica a 0
+    if (aguaSolo < absorveAgua) {
         absorveAgua = aguaSolo;
         b.setAgua(aguaSolo - absorveAgua);
         agua += absorveAgua;
@@ -70,7 +66,7 @@ void Exotica::Absorve(Bloco& b) {
 
     // absorve até 2 nutrientes do solo
     int maxNutr = Settings::Exotica::absorcao_nutrientes;
-    int absorveNutr = std::min(maxNutr, nutrSolo);
+    int absorveNutr = min(maxNutr, nutrSolo);
     if (absorveNutr > 0) {
         b.setNutri(nutrSolo - absorveNutr);
         nutrientes += absorveNutr;
@@ -86,7 +82,7 @@ void Exotica::Absorve(Bloco& b) {
         instantesSoloSeco = 0;
 }
 
-bool Exotica::CheckMorte(){
+bool Exotica::CheckMorte() {
     if (agua < Settings::Exotica::morre_agua_menor)
         return true;
 
@@ -97,22 +93,19 @@ bool Exotica::CheckMorte(){
     return false;
 }
 
-bool Exotica::passo(Jardim& j, int l, int c, Bloco& b) {
+bool Exotica::passo(Jardim &j, int l, int c, Bloco &b) {
     // 1) absorve e atualiza contadores
     Absorve(b);
 
     if (CheckMorte()) {
-        int nutrDeposita = std::min(Settings::Exotica::morre_nutri_solo, nutrientes);
+        int nutrDeposita = min(Settings::Exotica::morre_nutri_solo, nutrientes);
         b.setNutri(b.getNutri() + nutrDeposita);
         agua = 0;
         return false; // morreu → Jardim vai fazer delete
     }
 
-    // 3) se ainda está viva, pode tentar multiplicar
+    // 3) se está viva, pode tentar multiplicar
     tentaMultiplicar(j, l, c);
 
     return true;
 }
-
-
-

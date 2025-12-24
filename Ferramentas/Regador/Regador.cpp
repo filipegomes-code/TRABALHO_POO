@@ -1,25 +1,23 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #include "Regador.h"
 #include "Settings.h"
 #include "Jardim/Jardim.h"
 
-Regador::Regador()
-        : Ferramenta(), capacidadeAgua(Settings::Regador::capacidade) {}
+using namespace std;
 
-Ferramenta * Regador::duplicar() const {
+Regador::Regador() : Ferramenta(), capacidadeAgua(Settings::Regador::capacidade) {
+}
+
+Ferramenta *Regador::duplicar() const {
     return new Regador(*this);
 }
 
-bool Regador::aplicaEfeito(Bloco& b) {
+bool Regador::aplicaEfeito(Bloco &b) {
     if (capacidadeAgua <= 0)
         return false;
 
     int dose = Settings::Regador::dose;
     if (capacidadeAgua < dose)
-         dose = capacidadeAgua;
+        dose = capacidadeAgua;
 
     b.setAgua(b.getAgua() + dose);
     capacidadeAgua -= dose;
@@ -27,8 +25,6 @@ bool Regador::aplicaEfeito(Bloco& b) {
     return capacidadeAgua > 0;
 }
 
-std::string Regador::getDescricao() const {
-    return "Regador (agua=" + std::to_string(capacidadeAgua) + ")";
+string Regador::getDescricao() const {
+    return "Regador (água = " + to_string(capacidadeAgua) + ")";
 }
-
-

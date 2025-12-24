@@ -17,21 +17,22 @@ using namespace std;
 map<string, Jardim> Jardim::salvaguardas;
 
 Bloco::Bloco()
-        : planta(nullptr), ferr(nullptr), agua(0), nutri(0) {}
+    : planta(nullptr), ferr(nullptr), agua(0), nutri(0) {
+}
 
-Planta* Bloco::getPlanta() const {
+Planta *Bloco::getPlanta() const {
     return planta;
 }
 
-void Bloco::setPlanta(Planta* p) {
+void Bloco::setPlanta(Planta *p) {
     planta = p;
 }
 
-Ferramenta* Bloco::getFerramenta() const {
+Ferramenta *Bloco::getFerramenta() const {
     return ferr;
 }
 
-void Bloco::setFerramenta(Ferramenta* f) {
+void Bloco::setFerramenta(Ferramenta *f) {
     ferr = f;
 }
 
@@ -51,7 +52,6 @@ void Bloco::setNutri(int n) {
     nutri = n;
 }
 
-
 ///////////////            ///////////////
                 //JARDIM//
 ///////////////            ///////////////
@@ -59,10 +59,11 @@ void Bloco::setNutri(int n) {
 int Jardim::instantes = 0;
 
 Jardim::Jardim()
-        : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {}
+    : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {
+}
 
 Jardim::Jardim(int linhas, int colunas)
-        : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {
+    : dimLin(0), dimCol(0), tamJardim(0), solo(nullptr) {
     cria(linhas, colunas);
 }
 
@@ -70,7 +71,7 @@ Jardim::Jardim(const Jardim &outro) : dimLin(0), dimCol(0), tamJardim(0), solo(n
     *this = outro;
 }
 
-Jardim & Jardim::operator=(const Jardim &outro) {
+Jardim &Jardim::operator=(const Jardim &outro) {
     if (this == &outro) return *this;
 
     destroi();
@@ -109,26 +110,26 @@ Jardim::~Jardim() {
     destroi();
 }
 
-bool Jardim::salvarJogo(const std::string &nome, const Jardim &atual) {
+bool Jardim::salvarJogo(const string &nome, const Jardim &atual) {
     if (!atual.existe()) return false;
 
     salvaguardas[nome] = atual;
     return true;
 }
 
-bool Jardim::recuperarJogo(const std::string &nome, Jardim &atual) {
+bool Jardim::recuperarJogo(const string &nome, Jardim &atual) {
     auto it = salvaguardas.find(nome);
-    if (it == salvaguardas.end()) {
+    if (it == salvaguardas.end())
         return false;
-    }
 
     atual = it->second;
 
     atual.mostra();
+
     return true;
 }
 
-bool Jardim::apagarJogo(const std::string &nome) {
+bool Jardim::apagarJogo(const string &nome) {
     return salvaguardas.erase(nome) > 0;
 }
 
@@ -140,10 +141,8 @@ void Jardim::cria(int linhas, int colunas) {
     // se já existir, limpar primeiro
     destroi();
 
-    if (linhas < 1 || linhas > 26 || colunas < 1 || colunas > 26) {
-        // dimensões inválidas, não cria nada
+    if (linhas < 1 || linhas > 26 || colunas < 1 || colunas > 26)
         return;
-    }
 
     dimLin = linhas;
     dimCol = colunas;
@@ -163,7 +162,6 @@ void Jardim::destroi() {
 
     // libertar plantas e ferramentas
     for (int i = 0; i < tamJardim; ++i) {
-
         if (solo[i].getPlanta() != nullptr) {
             delete solo[i].getPlanta();
             solo[i].setPlanta(nullptr);
@@ -193,11 +191,11 @@ int Jardim::index(int l, int c) const {
 }
 
 // extrai o bloco dessa posicao
-Bloco& Jardim::getBloco(int l, int c) {
+Bloco &Jardim::getBloco(int l, int c) {
     return solo[index(l, c)];
 }
 
-const Bloco& Jardim::getBloco(int l, int c) const {
+const Bloco &Jardim::getBloco(int l, int c) const {
     return solo[index(l, c)];
 }
 
@@ -208,73 +206,73 @@ std::string Jardim::listaAllPlantas() const {
 
     for (int l = 0; l < dimLin; ++l) {
         for (int c = 0; c < dimCol; ++c) {
-            const Bloco& b = getBloco(l, c);
-            Planta* p = b.getPlanta();
+            const Bloco &b = getBloco(l, c);
+            Planta *p = b.getPlanta();
 
             if (p != nullptr) {
                 encontrou = true;
 
-                char lc_lin = (char)('a' + l);
-                char lc_col = (char)('a' + c);
+                char lc_lin = static_cast<char>('a' + l);
+                char lc_col = static_cast<char>('a' + c);
 
                 oss << "posição " << lc_lin << lc_col
-                    << " - tipo='" << p->Simbolo() << "'"
-                    << " | planta: agua=" << p->getAgua()
-                    << ", nutr=" << p->getNutrientes()
-                    << ", beleza=\"" << p->getBeleza() << "\""
-                    << " | solo: agua=" << b.getAgua()
-                    << ", nutr=" << b.getNutri()
-                    << "\n";
+                        << " - tipo = '" << p->Simbolo() << "'"
+                        << " | planta: água=" << p->getAgua()
+                        << ", nutrientes = " << p->getNutrientes()
+                        << ", beleza = \"" << p->getBeleza() << "\""
+                        << " | solo: água = " << b.getAgua()
+                        << ", nutrientes = " << b.getNutri()
+                        << "\n";
             }
         }
     }
 
     if (!encontrou)
-        oss << "Nao ha plantas no jardim.\n";
+        oss << "Não há plantas no jardim.\n";
 
     return oss.str();
 }
 
-std::string Jardim::lista1Planta(int l, int c) const{
-    std::ostringstream oss;
+string Jardim::lista1Planta(int l, int c) const {
+    ostringstream oss;
 
-    const Bloco& b = getBloco(l,c);
-    Planta* p = b.getPlanta();
+    const Bloco &b = getBloco(l, c);
+    Planta *p = b.getPlanta();
 
-    if(!b.getPlanta()){
+    if (!b.getPlanta()) {
         oss << "N tem planta nessa posicao\n";
         return oss.str();
     }
 
-    char lc_lin = (char)('a' + l);
-    char lc_col = (char)('a' + c);
+    char lc_lin = static_cast<char>('a' + l);
+    char lc_col = static_cast<char>('a' + c);
 
     oss << "posição " << lc_lin << lc_col
-        << " - tipo='" << p->Simbolo() << "'"
-        << " | planta: agua=" << p->getAgua()
-        << ", nutr=" << p->getNutrientes()
-        << ", beleza=\"" << p->getBeleza() << "\""
-        << " | solo: agua=" << b.getAgua()
-        << ", nutr=" << b.getNutri()
-        << "\n";
+            << " - tipo='" << p->Simbolo() << "'"
+            << " | planta: agua=" << p->getAgua()
+            << ", nutr=" << p->getNutrientes()
+            << ", beleza=\"" << p->getBeleza() << "\""
+            << " | solo: agua=" << b.getAgua()
+            << ", nutr=" << b.getNutri()
+            << "\n";
 
     return oss.str();
 }
 
-std::string Jardim::listaArea() const {
-    std::ostringstream oss;
+string Jardim::listaArea() const {
+    ostringstream oss;
 
     bool encontrou = false;
 
     for (int l = 0; l < dimLin; ++l) {
         for (int c = 0; c < dimCol; ++c) {
-            const Bloco& b = getBloco(l, c);
+            const Bloco &b = getBloco(l, c);
 
             bool temPlanta = (b.getPlanta());
-            bool temFerr   = (b.getFerramenta());
-            bool temJard   = (jard.getEstaNoJardim() &&
-                              jard.getPosLin() == l &&
-                              jard.getPosCol() == c);
+            bool temFerr = (b.getFerramenta());
+            bool temJard = (jard.getEstaNoJardim() &&
+                            jard.getPosLin() == l &&
+                            jard.getPosCol() == c);
 
             // posição totalmente vazia = ignora
             if (!temPlanta && !temFerr && !temJard)
@@ -282,12 +280,12 @@ std::string Jardim::listaArea() const {
 
             encontrou = true;
 
-            char lc_lin = (char)('a' + l);
-            char lc_col = (char)('a' + c);
+            char lc_lin = static_cast<char>('a' + l);
+            char lc_col = static_cast<char>('a' + c);
 
-            oss << "posicao " << lc_lin << lc_col
-                << " | solo: agua=" << b.getAgua()
-                << ", nutr=" << b.getNutri();
+            oss << "posição " << lc_lin << lc_col
+                    << " | solo: água = " << b.getAgua()
+                    << ", nutrientes = " << b.getNutri();
 
             // jardineiro
             if (temJard)
@@ -295,17 +293,17 @@ std::string Jardim::listaArea() const {
 
             // planta
             if (temPlanta) {
-                const Planta* p = b.getPlanta();
-                oss << " | planta: tipo='" << p->Simbolo() << "'"
-                    << ", agua=" << p->getAgua()
-                    << ", nutr=" << p->getNutrientes()
-                    << ", beleza=\"" << p->getBeleza() << "\"";
+                const Planta *p = b.getPlanta();
+                oss << " | planta: tipo = '" << p->Simbolo() << "'"
+                        << ", água = " << p->getAgua()
+                        << ", nutrientes = " << p->getNutrientes()
+                        << ", beleza = \"" << p->getBeleza() << "\"";
             }
 
             // ferramenta
             if (temFerr) {
-                const Ferramenta* f = b.getFerramenta();
-                oss << " | ferramenta: tipo='" << f->getTipo() << "'";
+                const Ferramenta *f = b.getFerramenta();
+                oss << " | ferramenta: tipo = '" << f->getTipo() << "'";
             }
 
             oss << "\n";
@@ -313,53 +311,53 @@ std::string Jardim::listaArea() const {
     }
 
     if (!encontrou)
-        oss << "Nao ha nenhuma posicao com conteudo no jardim.\n";
+        oss << "Não há nenhuma posição com conteúdo no jardim.\n";
 
     return oss.str();
 }
 
-// se a pessoa n definir raio [n], apenas mostra info do bloco nessa posicao
-std::string Jardim::listaAreaIndicada(int l, int c) const {
-    std::ostringstream oss;
+// se a pessoa não definir raio [n], apenas mostra info do bloco nessa posicao
+string Jardim::listaAreaIndicada(int l, int c) const {
+    ostringstream oss;
 
-    const Bloco& b = getBloco(l, c);
-    char lc_lin = (char)('a' + l);
-    char lc_col = (char)('a' + c);
+    const Bloco &b = getBloco(l, c);
+    char lc_lin = static_cast<char>('a' + l);
+    char lc_col = static_cast<char>('a' + c);
 
 
     bool temPlanta = (b.getPlanta());
-    bool temFerr   = (b.getFerramenta());
-    bool temJard   = (jard.getEstaNoJardim() &&
-                        jard.getPosLin() == l &&
-                        jard.getPosCol() == c);
+    bool temFerr = (b.getFerramenta());
+    bool temJard = (jard.getEstaNoJardim() &&
+                    jard.getPosLin() == l &&
+                    jard.getPosCol() == c);
 
-    oss << "posicao " << lc_lin << lc_col
-        << " | solo: agua=" << b.getAgua()
-        << ", nutr=" << b.getNutri();
+    oss << "posição " << lc_lin << lc_col
+            << " | solo: água = " << b.getAgua()
+            << ", nutrientes = " << b.getNutri() << "\n";
 
     if (!temPlanta && !temFerr && !temJard) {
         oss << " | vazia\n";
         return oss.str();
     }
 
-    if(temPlanta || temFerr){
+    if (temPlanta || temFerr) {
         // jardineiro
         if (temJard)
             oss << " | jardineiro: *";
 
         // planta
         if (temPlanta) {
-            const Planta* p = b.getPlanta();
-            oss << " | planta: tipo='" << p->Simbolo() << "'"
-                << ", agua=" << p->getAgua()
-                << ", nutr=" << p->getNutrientes()
-                << ", beleza=\"" << p->getBeleza() << "\"";
-            }
+            const Planta *p = b.getPlanta();
+            oss << " | planta: tipo = '" << p->Simbolo() << "'"
+                    << ", água = " << p->getAgua()
+                    << ", nutrientes = " << p->getNutrientes()
+                    << ", beleza = \"" << p->getBeleza() << "\"";
+        }
 
         // ferramenta
         if (temFerr) {
-            const Ferramenta* f = b.getFerramenta();
-            oss << " | ferramenta: tipo='" << f->getTipo() << "'";
+            const Ferramenta *f = b.getFerramenta();
+            oss << " | ferramenta: tipo = '" << f->getTipo() << "'";
         }
 
         oss << "\n";
@@ -367,27 +365,27 @@ std::string Jardim::listaAreaIndicada(int l, int c) const {
     return oss.str();
 }
 
-// se a pessoa definir raio [n], mostra info dos blocos com raio [n] a partir do bloco atual (l,c)
-std::string Jardim::listaAreaRaio(int l, int c, int n)const{
-    std::ostringstream oss;
+// se a pessoa definir raio [n], mostra info dos blocos com raio [n] a partir do bloco atual (l, c)
+string Jardim::listaAreaRaio(int l, int c, int n) const {
+    ostringstream oss;
 
-    // ja mostra a info na posicao atual (l,c) -> centro
-    oss << listaAreaIndicada(l,c);
+    // ja mostra a info na posicao atual (l, c) → centro
+    oss << listaAreaIndicada(l, c);
 
-    for (int i = -n; i <= n ; ++i) {
-        for (int j = -n; j<=n ; ++j) {
-            // n queremos que i e j sejam 0, senao isso é o centro que já foi tratado antes
+    for (int i = -n; i <= n; ++i) {
+        for (int j = -n; j <= n; ++j) {
+            // não queremos que i e j sejam 0, senao isso é o centro que já foi tratado antes
             if (i == 0 && j == 0) continue;
 
-            int linNovaVizRaio = l+i;
-            int colNovaVizRaio = c+j;
+            int linNovaVizRaio = l + i;
+            int colNovaVizRaio = c + j;
 
-            // segurança: não sair fora do jardim
+            // segurança: não sair do jardim
             if (linNovaVizRaio < 0 || linNovaVizRaio >= dimLin ||
                 colNovaVizRaio < 0 || colNovaVizRaio >= dimCol)
                 continue;
 
-            oss << listaAreaIndicada(linNovaVizRaio,colNovaVizRaio);
+            oss << listaAreaIndicada(linNovaVizRaio, colNovaVizRaio);
         }
     }
 
@@ -395,12 +393,12 @@ std::string Jardim::listaAreaRaio(int l, int c, int n)const{
 }
 
 // apenas atribui a cada bloco(pos. jardim) as caracteristicas
-void Jardim::inicializa() {
+void Jardim::inicializa() const {
     for (int i = 0; i < tamJardim; ++i) {
-        int agua = rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1)
+        int agua = rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1) // NOLINT(cert-msc50-cpp)
                    + Settings::Jardim::agua_min;
 
-        int nutri = rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1)
+        int nutri = rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1) // NOLINT(cert-msc50-cpp)
                     + Settings::Jardim::nutrientes_min;
 
         solo[i].setAgua(agua);
@@ -413,82 +411,98 @@ void Jardim::inicializa() {
     ferramentaPosRandom();
 }
 
-void Jardim::ferramentaPosRandom(){
+void Jardim::ferramentaPosRandom() const {
     // 3 ferr aleatórias
-    for (int i = 0; i < 3; ) {
-        int pos = rand() % tamJardim;
+    for (int i = 0; i < 3;) {
+        int pos = rand() % tamJardim; // NOLINT(cert-msc50-cpp)
 
         if (solo[pos].getFerramenta() == nullptr) {
-            int numRand = rand() % 4 + 1;
             // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
-            switch (numRand) {
-                case 1: solo[pos].setFerramenta(new Adubo()); break;
-                case 2: solo[pos].setFerramenta(new Regador()); break;
-                case 3: solo[pos].setFerramenta(new Tesoura()); break;
-                case 4: solo[pos].setFerramenta(new FerramentaZ()); break;
-                default: solo[pos].setFerramenta(new Adubo()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
+            switch (rand() % 4 + 1) { // NOLINT(cert-msc50-cpp)
+                case 1: solo[pos].setFerramenta(new Adubo());
+                    break;
+                case 2: solo[pos].setFerramenta(new Regador());
+                    break;
+                case 3: solo[pos].setFerramenta(new Tesoura());
+                    break;
+                case 4: solo[pos].setFerramenta(new FerramentaZ());
+                    break;
+                default: solo[pos].setFerramenta(new Adubo());
+                    break; // se de qql maneira não calhar um daqueles numeros, cria na msm.
             }
             ++i;
         }
     }
 }
 
-void Jardim::plantaPosRandom() {
+void Jardim::plantaPosRandom() const {
     // 3 plantas aleatórias
-    for (int i = 0; i < 3; ) {
-        int pos = rand() % tamJardim;
+    for (int i = 0; i < 3;) {
+        int pos = rand() % tamJardim; // NOLINT(cert-msc50-cpp)
 
         if (solo[pos].getPlanta() == nullptr) {
-            int numRand = rand() % 4 + 1;
             // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
-            switch (numRand) {
-                case 1: solo[pos].setPlanta(new Roseira()); break;
-                case 2: solo[pos].setPlanta(new Cacto()); break;
-                case 3: solo[pos].setPlanta(new ErvaDaninha()); break;
-                case 4: solo[pos].setPlanta(new Exotica()); break;
-                default: solo[pos].setPlanta(new Roseira()); break; // se de qql maneira n calhar um daqueles numeros, cria na msm.
+            switch (rand() % 4 + 1) { // NOLINT(cert-msc50-cpp)
+                case 1: solo[pos].setPlanta(new Roseira());
+                    break;
+                case 2: solo[pos].setPlanta(new Cacto());
+                    break;
+                case 3: solo[pos].setPlanta(new ErvaDaninha());
+                    break;
+                case 4: solo[pos].setPlanta(new Exotica());
+                    break;
+                default: solo[pos].setPlanta(new Roseira());
+                    break; // se de qql maneira não calhar um daqueles numeros, cria na msm.
             }
             ++i;
         }
     }
 }
 
-void Jardim::mostra()const{
+void Jardim::mostra() const {
+    if (!solo) return;
 
+    cout << "\n";
     cout << ' ' << ' ';
-    for (int regua_col = 0; regua_col < dimCol ; regua_col++)
-        cout << char('A' + regua_col) << ' ';
+    for (int regua_col = 0; regua_col < dimCol; regua_col++)
+        cout << static_cast<char>('A' + regua_col) << ' ';
     cout << endl;
 
-    // imprime a regua em cada linha e imprime o jardim. Usa offset para não mostrar o mesmo elemento repetido.
+    // Imprime a regua em cada linha e imprime o jardim. Usa offset para não mostrar o mesmo elemento repetido.
     for (int regua_lin = 0; regua_lin < dimLin; regua_lin++) {
-        cout << char('A'+ regua_lin) << ' ';
-        for (int j = 0; j < dimCol ; j++) {
+        cout << static_cast<char>('A' + regua_lin) << ' ';
+        for (int j = 0; j < dimCol; j++) {
             // Ordem das ferramentas
-            if(jard.getEstaNoJardim() &&  jard.getPosLin() == regua_lin && jard.getPosCol() == j){
-                cout << jard.getSimbolo() << ' ';
+            if (jard.getEstaNoJardim() && jard.getPosLin() == regua_lin && jard.getPosCol() == j) {
+                cout << Jardineiro::getSimbolo() << ' ';
+            } else {
+                const Bloco &b = solo[regua_lin * dimCol + j];
+
+                Planta *p = b.getPlanta();
+                Ferramenta *f = b.getFerramenta();
+
+                if (p != nullptr) {
+                    cout << p->Simbolo() << ' ';
+                } else if (f != nullptr) {
+                    cout << f->getTipo() << ' ';
+                } else {
+                    cout << "  ";
+                }
             }
-            else if(solo[regua_lin * dimCol + j].getPlanta() != nullptr ) {
-                cout << solo[regua_lin * dimCol + j].getPlanta()->Simbolo() << ' ';
-            }else if(solo[regua_lin * dimCol + j].getFerramenta() != nullptr) {
-                cout << solo[regua_lin * dimCol + j].getFerramenta()->getTipo() << ' ';
-            }
-            else
-                cout << "  ";
         }
         cout << endl;
     }
 }
 
 
-void Jardim::listFerrJardineiro() const{
+void Jardim::listFerrJardineiro() const {
     auto lista = jard.listarFerramentas();
     if (lista.empty()) {
-        std::cout << "Sem ferramentas\n";
+        cout << "O jardineiro não possui ferramentas no inventário.\n";
         return;
     }
-    for (auto& s : lista)
-        std::cout << s << "\n";
+    for (auto &s: lista)
+        cout << s << "\n";
 }
 
 bool Jardim::comprarFerrJardineiro(char tipoFerr) {
@@ -508,13 +522,13 @@ bool Jardim::plantar(int l, int c, char tipo) {
     if (!jard.podePlantar())
         return false;
 
-    Bloco& b = getBloco(l, c);
+    Bloco &b = getBloco(l, c);
 
     // posição já tem planta → falha
     if (b.getPlanta() != nullptr)
         return false;
 
-    Planta* nova = nullptr;
+    Planta *nova = nullptr;
 
     switch (tipo) {
         case 'c':
@@ -543,8 +557,8 @@ bool Jardim::colher(int l, int c) {
     if (!jard.podeColher())
         return false;
 
-    Bloco& b = getBloco(l, c);
-    Planta* p = b.getPlanta();
+    Bloco &b = getBloco(l, c);
+    Planta *p = b.getPlanta();
 
     // não há planta nessa posição
     if (p == nullptr)
@@ -557,18 +571,21 @@ bool Jardim::colher(int l, int c) {
 }
 
 // “Sempre que uma ferramenta é apanhada, aparece ‘por magia’ outra, aleatória, numa posição aleatória.”
-void Jardim::novaFerramentaPosRandom() {
+void Jardim::novaFerramentaPosRandom() const {
     int tentativas = 1000;
 
     while (tentativas--) {
-        int pos = rand() % tamJardim;
+        int pos = rand() % tamJardim; // NOLINT(cert-msc50-cpp)
         if (solo[pos].getFerramenta() == nullptr) {
-            int numRand = rand() % 3 + 1;
-            switch (numRand) {
-                case 1: solo[pos].setFerramenta(new Adubo());   break;
-                case 2: solo[pos].setFerramenta(new Regador()); break;
-                case 3: solo[pos].setFerramenta(new Tesoura()); break;
-                default: solo[pos].setFerramenta(new Adubo());  break;
+            switch (rand() % 3 + 1) { // NOLINT(cert-msc50-cpp)
+                case 1: solo[pos].setFerramenta(new Adubo());
+                    break;
+                case 2: solo[pos].setFerramenta(new Regador());
+                    break;
+                case 3: solo[pos].setFerramenta(new Tesoura());
+                    break;
+                default: solo[pos].setFerramenta(new Adubo());
+                    break;
             }
             return;
         }
@@ -576,7 +593,7 @@ void Jardim::novaFerramentaPosRandom() {
 }
 
 void Jardim::apanhaFerrAutomatico(int l, int c) {
-    Bloco& b = getBloco(l, c);
+    Bloco &b = getBloco(l, c);
     if (b.getFerramenta() != nullptr) {
         jard.apanharFerramenta(b.getFerramenta());
         b.setFerramenta(nullptr);
@@ -587,22 +604,22 @@ void Jardim::apanhaFerrAutomatico(int l, int c) {
 // jardineiro atualiza apenas posicoes na sua classe, usado na funcao Jardim::mostra
 // para mostrar a posicao onde se encontra
 bool Jardim::entraJardineiro(int l, int c) {
-    if(!jard.entrar(l,c))
+    if (!jard.entrar(l, c))
         return false;
-    //
-    apanhaFerrAutomatico(l,c);
+
+    apanhaFerrAutomatico(l, c);
     return true;
 }
 
 bool Jardim::saiJardineiro() {
-    if(jard.getEstaNoJardim()){
+    if (jard.getEstaNoJardim())
         return jard.sair();
-    }
+
     return false;
 }
 
-bool Jardim::moveJardineiro(string dir){
-    if(jard.getEstaNoJardim()) {
+bool Jardim::moveJardineiro(const string &dir) {
+    if (jard.getEstaNoJardim()) {
         char mov = dir[0];
         int lin = jard.getPosLin();
         int col = jard.getPosCol();
@@ -623,14 +640,14 @@ bool Jardim::moveJardineiro(string dir){
             default: break;
         }
         // Wrap horizontal
-        if(lin < 0) lin = dimLin-1;
+        if (lin < 0) lin = dimLin - 1;
         else if (lin >= dimLin) lin = 0;
 
         // Wrap vertical
-        if(col < 0) col = dimCol-1;
-        else if(col >= dimCol) col = 0;
+        if (col < 0) col = dimCol - 1;
+        else if (col >= dimCol) col = 0;
         // apanha ferramenta automaticamente
-        apanhaFerrAutomatico(lin,col);
+        apanhaFerrAutomatico(lin, col);
 
         return jard.atualizaPos(lin, col);
     }
@@ -644,12 +661,12 @@ bool Jardim::avancar(int n) {
         ++instantes;
 
         if (jard.getEstaNoJardim()) {
-            Ferramenta* f = jard.getFerramentaAtiva();
+            Ferramenta *f = jard.getFerramentaAtiva();
             if (f != nullptr) {
                 int l = jard.getPosLin();
                 int c = jard.getPosCol();
 
-                Bloco& b = getBloco(l, c);
+                Bloco &b = getBloco(l, c);
                 bool viva = f->aplicaEfeito(b);
                 if (!viva) {
                     jard.FerrDestruida();
@@ -660,8 +677,8 @@ bool Jardim::avancar(int n) {
         // 2) Todas as plantas atuam (um passo de tempo para cada)
         for (int l = 0; l < dimLin; ++l) {
             for (int c = 0; c < dimCol; ++c) {
-                Bloco& b = getBloco(l, c);
-                Planta* p = b.getPlanta();
+                Bloco &b = getBloco(l, c);
+                Planta *p = b.getPlanta();
                 if (p != nullptr) {
                     bool viva = p->passo(*this, l, c, b);
                     if (!viva) {
@@ -676,9 +693,3 @@ bool Jardim::avancar(int n) {
     }
     return true;
 }
-
-
-
-
-
-

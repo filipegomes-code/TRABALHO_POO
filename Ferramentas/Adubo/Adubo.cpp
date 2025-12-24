@@ -1,19 +1,17 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #include "Adubo.h"
 #include "Settings.h"
 #include "Jardim/Jardim.h"
 
-Adubo::Adubo()
-        : Ferramenta(), capacidadeAdubo(Settings::Adubo::capacidade) {}
+using namespace std;
 
-Ferramenta * Adubo::duplicar() const {
+Adubo::Adubo() : Ferramenta(), capacidadeAdubo(Settings::Adubo::capacidade) {
+}
+
+Ferramenta *Adubo::duplicar() const {
     return new Adubo(*this);
 }
 
-bool Adubo::aplicaEfeito(Bloco& b) {
+bool Adubo::aplicaEfeito(Bloco &b) {
     if (capacidadeAdubo <= 0)
         return false;
 
@@ -27,6 +25,6 @@ bool Adubo::aplicaEfeito(Bloco& b) {
     return capacidadeAdubo > 0;
 }
 
-std::string Adubo::getDescricao() const {
-    return "Adubo (qtd=" + std::to_string(capacidadeAdubo) + ")";
+string Adubo::getDescricao() const {
+    return "Adubo (qtd = " + to_string(capacidadeAdubo) + ")";
 }

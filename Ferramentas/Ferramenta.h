@@ -1,7 +1,3 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #ifndef TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_FERRAMENTA_H
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_FERRAMENTA_H
 
@@ -12,24 +8,24 @@ class Bloco;
 class Ferramenta {
 public:
     Ferramenta();
-    Ferramenta(char c);
+
     virtual ~Ferramenta() = default;
 
-    virtual Ferramenta* duplicar() const = 0;
+    [[nodiscard]] virtual Ferramenta *duplicar() const = 0;
 
-    virtual bool aplicaEfeito(Bloco& b) = 0;
+    virtual bool aplicaEfeito(Bloco &b) = 0;
 
-    int getNumSerie() const { return numSerie; }
-    virtual char getTipo() const = 0;
+    [[nodiscard]] int getNumSerie() const { return numSerie; }
 
-    virtual std::string getDescricao() const = 0;
+    [[nodiscard]] virtual char getTipo() const = 0;
 
-private:
-    static int contadorNumSerie; // contar estático para atribuir números de série únicos
+    [[nodiscard]] virtual std::string getDescricao() const = 0;
 
 protected:
     int numSerie; // número de série de cada ferramenta
-};
 
+private:
+    static int contadorNumSerie; // contador estático para atribuir números de série únicos
+};
 
 #endif //TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_FERRAMENTA_H

@@ -5,54 +5,61 @@
 
 #include "Jardim/Jardim.h"
 
+using std::string_view;
+using std::vector;
+using std::string;
+using std::unique_ptr;
+using std::istream;
+
 namespace cmd_keys {
-    constexpr std::string_view FIM = "fim";
-    constexpr std::string_view JARDIM = "jardim";
-    constexpr std::string_view EXECUTA = "executa";
-    constexpr std::string_view AVANCA = "avanca";
+    constexpr string_view FIM = "fim";
+    constexpr string_view JARDIM = "jardim";
+    constexpr string_view EXECUTA = "executa";
+    constexpr string_view AVANCA = "avanca";
 
     // Listagens
-    constexpr std::string_view LPLANTAS = "lplantas"; // tipo planta, pos , valor propriedades internas, propriedades solo
-    constexpr std::string_view LPLANTA = "lplanta"; // propriedas da planta numa certa posicao
-    constexpr std::string_view LAREA = "larea"; // ler do enunciado
-    constexpr std::string_view LSOLO = "lsolo"; // ler do enunciado
-    constexpr std::string_view LFERR = "lferr"; // ferr que jardineiro transporta + a da mão. (detalhes + identificação)
+    constexpr string_view LPLANTAS = "lplantas";
+    constexpr string_view LPLANTA = "lplanta";
+    constexpr string_view LAREA = "larea";
+    constexpr string_view LSOLO = "lsolo";
+    constexpr string_view LFERR = "lferr";
 
     // Ações
-    constexpr std::string_view COLHE = "colhe";
-    constexpr std::string_view PLANTA = "planta";
-    constexpr std::string_view LARGA = "larga"; // se tiver ferr na mao, larga e junta às outras
-    constexpr std::string_view PEGA = "pega"; // coloca na mao uma ferr com o numero de serie n, se existir
-    constexpr std::string_view COMPRA = "compra"; // compra ferr de tipo g,a,t,z
+    constexpr string_view COLHE = "colhe";
+    constexpr string_view PLANTA = "planta";
+    constexpr string_view LARGA = "larga";
+    constexpr string_view PEGA = "pega";
+    constexpr string_view COMPRA = "compra";
 
     // Movimento do Jardineiro
-    constexpr std::string_view ENTRA = "entra"; // se já estiver no jardim, teletransportasse para essa pos
-    constexpr std::string_view SAI = "sai"; // sai jardim
-    constexpr std::string_view ESQ = "e";
-    constexpr std::string_view DIR = "d";
-    constexpr std::string_view CIMA = "c";
-    constexpr std::string_view BAIXO = "b";
+    constexpr string_view ENTRA = "entra";
+    constexpr string_view SAI = "sai";
+    constexpr string_view ESQ = "e";
+    constexpr string_view DIR = "d";
+    constexpr string_view CIMA = "c";
+    constexpr string_view BAIXO = "b";
 
     // Persistência
-    constexpr std::string_view GRAVA = "grava";
-    constexpr std::string_view RECUPERA = "recupera";
-    constexpr std::string_view APAGA = "apaga";
+    constexpr string_view GRAVA = "grava";
+    constexpr string_view RECUPERA = "recupera";
+    constexpr string_view APAGA = "apaga";
 }
 
 // --- Interface Comando ---
 class Comando {
 public:
     virtual ~Comando() = default;
-    virtual bool executar(Jardim& jardim, const std::vector<std::string>& args) = 0; // Retorna false se for para terminar o programa (comando 'fim'), true caso contrário
+
+    virtual bool executar(Jardim &jardim, const vector<string> &args) = 0;
 };
 
 // --- Fábrica de Comandos ---
 class ComandoFactory {
 public:
-    static std::unique_ptr<Comando> criar(const std::string& nome); // Cria o comando apropriado com base na string 'nome'
+    static unique_ptr<Comando> criar(const string &nome);
 };
 
 // --- Processamento dos Comandos ---
-bool ProcessarComandos(std::istream& in, Jardim& jardim);
+bool ProcessarComandos(istream &in, Jardim &jardim);
 
 #endif //TRABALHO_COMANDOS_H

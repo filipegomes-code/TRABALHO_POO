@@ -6,15 +6,18 @@
 class Cacto : public Planta {
 public:
     Cacto();
+
     ~Cacto() override;
 
-    Planta* duplicar() const override;
+    [[nodiscard]] Planta *duplicar() const override;
 
-    char Simbolo() const override { return 'c'; }
-    bool passo(Jardim& j, int l, int c, Bloco& b) override;
+    [[nodiscard]] char Simbolo() const override { return 'c'; }
+
+    bool passo(Jardim &j, int l, int c, Bloco &b) override;
 
 protected:
-    void Absorve(Bloco& b) override;
+    void Absorve(Bloco &b) override;
+
     bool CheckMorte() override;
 
 private:
@@ -24,7 +27,7 @@ private:
     int nutrAbsVida = 0;
 
     // helpers privados para multiplicação
-    void tentaMultiplicar(Jardim& j, int l, int c);
+    void tentaMultiplicar(Jardim &j, int l, int c);
 };
 
 #endif //TRABALHO_CACTO_H

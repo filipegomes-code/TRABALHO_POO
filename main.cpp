@@ -7,16 +7,16 @@
 
 using namespace std;
 
-int main(){
-    srand(time(nullptr)); // gera semente
+int main() {
+    srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     Jardim mapa;
 
-    cout << "BEM-VINDO AO SIMULADOR DE JARDIM (POO)" << endl;
+    cout << "========= BEM-VINDO AO SIMULADOR DE JARDIM =========" << endl;
     cout << "Comece por criar o jardim: jardim <linhas> <colunas>" << endl;
 
     while (true) {
         string comando;
-        cout << "> ";
+        cout << "\n> ";
 
         if (!getline(cin, comando)) break; // erro ou EOF
 

@@ -2,7 +2,7 @@
 #define SETTINGS_SETTINGS_H
 
 class Settings {
-    public:
+public:
     class Jardim {
     public:
         static const int agua_min = 80;
@@ -10,23 +10,27 @@ class Settings {
         static const int nutrientes_min = 40;
         static const int nutrientes_max = 50;
     };
+
     class Regador {
     public:
         static const int capacidade = 200;
         static const int dose = 10;
     };
+
     class Adubo {
     public:
         static const int capacidade = 100;
         static const int dose = 10;
     };
+
     class FerramentaZ {
     public:
-        static const int capacidade_inicial       = 50;  // cargas
-        static const int custo_por_uso           = 5;    // cargas gastas num uso com sucesso
+        static const int capacidade_inicial = 50; // cargas
+        static const int custo_por_uso = 5; // cargas gastas num uso com sucesso
         static const int nutrientes_para_converter = 15; // nutrientes consumidos
-        static const int agua_fornecida          = 25;   // água adicionada ao solo
+        static const int agua_fornecida = 25; // água adicionada ao solo
     };
+
     class Jardineiro {
     public:
         static const int max_movimentos = 10;
@@ -34,8 +38,9 @@ class Settings {
         static const int max_plantacoes = 2;
         static const int max_colheitas = 5;
     };
+
     class Cacto {
-        public:
+    public:
         static const int absorcao_agua_percentagem = 25;
         static const int absorcao_nutrientes = 5;
         static const int morre_agua_solo_maior = 100;
@@ -45,8 +50,9 @@ class Settings {
         static const int multiplica_nutrientes_maior = 100;
         static const int multiplica_agua_maior = 50;
     };
+
     class Roseira {
-        public:
+    public:
         static const int inicial_agua = 25;
         static const int inicial_nutrientes = 25;
         static const int perda_agua = 4;
@@ -62,8 +68,9 @@ class Settings {
         static const int original_nutrientes = 100;
         static const int original_agua_percentagem = 50;
     };
+
     class ErvaDaninha {
-        public:
+    public:
         static const int inicial_agua = 5;
         static const int inicial_nutrientes = 5;
         static const int absorcao_agua = 1;
@@ -74,8 +81,9 @@ class Settings {
         static const int nova_nutrientes = 5;
         static const int original_nutrientes = 5;
     };
+
     class Exotica {
-        public:
+    public:
         static constexpr int inicial_agua = 20;
         static constexpr int inicial_nutrientes = 20;
         static constexpr int absorcao_agua = 8;

@@ -3,16 +3,19 @@
 
 #include "Ferramentas/Ferramenta.h"
 
+using std::string;
+
 class Tesoura : public Ferramenta {
 public:
     Tesoura();
 
-    Ferramenta* duplicar() const override;
+    [[nodiscard]] Ferramenta *duplicar() const override;
 
-    bool aplicaEfeito(Bloco& b) override;
+    bool aplicaEfeito(Bloco &b) override;
 
-    char getTipo() const override { return 't'; }
-    std::string getDescricao() const override;
+    [[nodiscard]] char getTipo() const override { return 't'; }
+
+    [[nodiscard]] string getDescricao() const override;
 };
 
 #endif //TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_TESOURA_H

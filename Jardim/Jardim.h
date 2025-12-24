@@ -5,29 +5,36 @@
 #include <string>
 #include <map>
 
+using std::string;
+using std::map;
+
 class Planta;
 class Ferramenta;
 
 // cada pos(bloco) do jardim.
-class Bloco{
+class Bloco {
 public:
     Bloco();
 
-    Planta* getPlanta() const;
-    void setPlanta(Planta* p);
+    [[nodiscard]] Planta *getPlanta() const;
 
-    Ferramenta* getFerramenta() const;
-    void setFerramenta(Ferramenta* f);
+    void setPlanta(Planta *p);
 
-    int getAgua() const;
+    [[nodiscard]] Ferramenta *getFerramenta() const;
+
+    void setFerramenta(Ferramenta *f);
+
+    [[nodiscard]] int getAgua() const;
+
     void setAgua(int n);
 
-    int getNutri() const;
+    [[nodiscard]] int getNutri() const;
+
     void setNutri(int n);
 
 private:
-    Planta* planta;
-    Ferramenta* ferr;
+    Planta *planta;
+    Ferramenta *ferr;
     int agua;
     int nutri;
 };
@@ -36,49 +43,66 @@ private:
 class Jardim {
 public:
     Jardim();
+
     Jardim(int linhas, int colunas);
 
-    Jardim(const Jardim& outro);
-    Jardim& operator=(const Jardim& outro);
+    Jardim(const Jardim &outro);
+
+    Jardim &operator=(const Jardim &outro);
 
     ~Jardim();
 
-    static bool salvarJogo(const std::string& nome, const Jardim& atual);
-    static bool recuperarJogo(const std::string& nome, Jardim& atual);
-    static bool apagarJogo(const std::string& nome);
+    static bool salvarJogo(const string &nome, const Jardim &atual);
 
-    bool existe() const;             // há jardim criado? (solo != nullptr)
+    static bool recuperarJogo(const string &nome, Jardim &atual);
+
+    static bool apagarJogo(const string &nome);
+
+    [[nodiscard]] bool existe() const; // há jardim criado? (solo != nullptr)
     void cria(int linhas, int colunas);
+
     void destroi();
 
-    int getDimLin() const;
-    int getDimCol() const;
+    [[nodiscard]] int getDimLin() const;
 
-    Bloco& getBloco(int l, int c);
-    const Bloco& getBloco(int l, int c) const;
+    [[nodiscard]] int getDimCol() const;
+
+    Bloco &getBloco(int l, int c);
+
+    [[nodiscard]] const Bloco &getBloco(int l, int c) const;
 
     // operaçoes de listar informação
-    std::string listaAllPlantas()const;
-    std::string lista1Planta(int l, int c) const;
-    std::string listaArea() const;
-    std::string listaAreaIndicada(int l, int c) const;
-    std::string listaAreaRaio(int l, int c, int n)const;
+    [[nodiscard]] string listaAllPlantas() const;
+
+    [[nodiscard]] string lista1Planta(int l, int c) const;
+
+    [[nodiscard]] string listaArea() const;
+
+    [[nodiscard]] string listaAreaIndicada(int l, int c) const;
+
+    [[nodiscard]] string listaAreaRaio(int l, int c, int n) const;
 
     // operaçoes do jardineiro que o jardim controla
-    bool JardineiroDentro() const { return jard.getEstaNoJardim(); }
-    const Jardineiro& getJardineiro() const { return jard; }
+    [[nodiscard]] bool JardineiroDentro() const { return jard.getEstaNoJardim(); }
+    [[nodiscard]] const Jardineiro &getJardineiro() const { return jard; }
 
     void listFerrJardineiro() const;
+
     bool comprarFerrJardineiro(char tipoFerr);
+
     bool pegarFerrJardineiro(int numSerie);
+
     bool largarFerrJardineiro();
 
-    bool plantar(int l , int c, char tipo);
+    bool plantar(int l, int c, char tipo);
+
     bool colher(int l, int c);
 
     bool entraJardineiro(int l, int c);
+
     bool saiJardineiro();
-    bool moveJardineiro(std::string dir);   // 'e','d','c','b'
+
+    bool moveJardineiro(const string &dir); // 'e','d','c','b'
 
     bool avancar(int n);
 
@@ -89,18 +113,21 @@ private:
     int dimLin;
     int dimCol;
     int tamJardim;
-    Bloco* solo;
+    Bloco *solo;
     Jardineiro jard;
 
-    static std::map<std::string, Jardim> salvaguardas;
+    static map<string, Jardim> salvaguardas;
 
-    int index(int l, int c) const; // converter l c para indice no array
-    void inicializa();
-    void plantaPosRandom();
-    void ferramentaPosRandom();
+    [[nodiscard]] int index(int l, int c) const; // converter l c para indice no array
+    void inicializa() const;
+
+    void plantaPosRandom() const;
+
+    void ferramentaPosRandom() const;
 
     void apanhaFerrAutomatico(int l, int c);
-    void novaFerramentaPosRandom();
+
+    void novaFerramentaPosRandom() const;
 };
 
 #endif //TRABALHO_JARDIM_H

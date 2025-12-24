@@ -3,19 +3,22 @@
 
 #include "Ferramentas/Ferramenta.h"
 
+using std::string;
+
 class Adubo : public Ferramenta {
 public:
     Adubo();
 
-    Ferramenta* duplicar() const override;
+    [[nodiscard]] Ferramenta *duplicar() const override;
 
-    bool aplicaEfeito(Bloco& b) override;
+    bool aplicaEfeito(Bloco &b) override;
 
-    char getTipo() const override { return 'a'; }
-    std::string getDescricao() const override;
+    [[nodiscard]] char getTipo() const override { return 'a'; }
+
+    [[nodiscard]] string getDescricao() const override;
+
 private:
     int capacidadeAdubo;
 };
-
 
 #endif //TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_ADUBO_H

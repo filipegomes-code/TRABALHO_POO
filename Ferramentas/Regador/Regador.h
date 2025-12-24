@@ -1,26 +1,24 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #ifndef TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_REGADOR_H
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_REGADOR_H
+
 #include "Ferramentas/Ferramenta.h"
 
+using std::string;
 
 class Regador : public Ferramenta {
 public:
     Regador();
 
-    Ferramenta* duplicar() const override;
+    [[nodiscard]] Ferramenta *duplicar() const override;
 
-    bool aplicaEfeito(Bloco& b) override;
+    bool aplicaEfeito(Bloco &b) override;
 
-    char getTipo() const override { return 'g'; }
-    std::string getDescricao() const override;
+    [[nodiscard]] char getTipo() const override { return 'g'; }
+
+    [[nodiscard]] string getDescricao() const override;
 
 private:
     int capacidadeAgua;
 };
-
 
 #endif //TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_REGADOR_H

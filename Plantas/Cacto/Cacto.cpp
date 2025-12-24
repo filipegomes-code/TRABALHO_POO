@@ -1,26 +1,21 @@
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
 #include "Cacto.h"
 #include "../../Settings.h"
-#include <algorithm>
-#include <iostream>
 
-// CACTO
-Cacto::Cacto() : Planta(0,0, "neutra"){}
+Cacto::Cacto() : Planta(0, 0, "neutra") {
+}
 
-Cacto::~Cacto(){}
+Cacto::~Cacto() = default;
 
-Planta * Cacto::duplicar() const {
+Planta *Cacto::duplicar() const {
     return new Cacto(*this);
 }
 
-// 3) Multiplicação: tenta encontrar vizinho vazio e criar novo cacto metade/metade
-void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
+// Multiplicação: tenta encontrar vizinho vazio e criar cato metade/metade
+void Cacto::tentaMultiplicar(Jardim &j, int l, int c) {
     if (nutrientes <= Settings::Cacto::multiplica_nutrientes_maior || agua <= Settings::Cacto::multiplica_agua_maior)
         return;
 
-    // Vamos considerar vizinhos 8-direções (dl,dc em {-1,0,1} exceto 0,0)
+    // Vamos considerar vizinhos 8-direções (dl, dc em {-1,0,1} exceto 0,0)
     // Podes adaptar para só 4 se a stor tiver dito isso.
     int linMax = j.getDimLin();
     int colMax = j.getDimCol();
@@ -28,7 +23,7 @@ void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
     // vê vizinhos nas diagonais
     for (int dl = -1; dl <= 1; ++dl) {
         for (int dc = -1; dc <= 1; ++dc) {
-            if (dl == 0 && dc == 0) continue; // pula 0, pq é a posicao atual a soma das linhas e colunas +0
+            if (dl == 0 && dc == 0) continue; // pula 0, porque é a posicao atual a soma das linhas e colunas +0
 
             int nl = l + dl;
             int nc = c + dc;
@@ -36,7 +31,7 @@ void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
             if (nl < 0 || nl >= linMax || nc < 0 || nc >= colMax)
                 continue;
 
-            Bloco& viz = j.getBloco(nl, nc);
+            Bloco &viz = j.getBloco(nl, nc);
             if (viz.getPlanta() == nullptr) {
                 // faz split de água/nutrientes
                 int aguaNovo = agua / 2;
@@ -45,8 +40,8 @@ void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
                 agua -= aguaNovo;
                 nutrientes -= nutrNovo;
 
-                auto* novo = new Cacto();
-                // como estamos dentro de Cacto, podemos mexer nos protected do novo
+                auto *novo = new Cacto();
+                // como estamos dentro de Cato, podemos mexer nos protected do novo
                 novo->agua = aguaNovo;
                 novo->nutrientes = nutrNovo;
 
@@ -57,7 +52,7 @@ void Cacto::tentaMultiplicar(Jardim& j, int l, int c) {
     }
 }
 
-void Cacto::Absorve(Bloco& b) {
+void Cacto::Absorve(Bloco &b) {
     // 25% da água do solo
     int aguaSolo = b.getAgua();
     int absorveAgua = (Settings::Cacto::absorcao_agua_percentagem * aguaSolo) / 100; // 25%
@@ -88,17 +83,17 @@ void Cacto::Absorve(Bloco& b) {
         ++contaSemNutrientes;
     else
         contaSemNutrientes = 0;
-
 }
 
-bool Cacto::CheckMorte(){
+bool Cacto::CheckMorte() {
     // se em 3 instantes seguidos tiver os valores que a matam, é destruida.
-    if (contaAguaAlta >= Settings::Cacto::morre_agua_solo_instantes || contaSemNutrientes > Settings::Cacto::morre_nutrientes_solo_instantes)
+    if (contaAguaAlta >= Settings::Cacto::morre_agua_solo_instantes || contaSemNutrientes >
+        Settings::Cacto::morre_nutrientes_solo_instantes)
         return true;
     return false;
 }
 
-bool Cacto::passo(Jardim& j, int l, int c, Bloco& b) {
+bool Cacto::passo(Jardim &j, int l, int c, Bloco &b) {
     // 1) absorve e atualiza contadores
     Absorve(b);
 
@@ -108,10 +103,8 @@ bool Cacto::passo(Jardim& j, int l, int c, Bloco& b) {
         return false; // morreu → Jardim vai fazer delete
     }
 
-    // 3) se ainda está viva, pode tentar multiplicar
+    // 3) se está viva, pode tentar multiplicar
     tentaMultiplicar(j, l, c);
 
     return true;
 }
-
-// fazer funcao para retornar char 'c' -> representa cacto

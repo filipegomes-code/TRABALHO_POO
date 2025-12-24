@@ -1,7 +1,3 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #include "Jardineiro.h"
 
 #include <algorithm>
@@ -12,6 +8,8 @@
 #include "Ferramentas/Tesoura/Tesoura.h"
 #include "Ferramentas/FerramentaZ/FerramentaZ.h"
 
+using namespace std;
+
 Jardineiro::~Jardineiro() {
     limparInventario();
 }
@@ -20,7 +18,7 @@ Jardineiro::Jardineiro(const Jardineiro &outro) {
     *this = outro;
 }
 
-Jardineiro & Jardineiro::operator=(const Jardineiro &outro) {
+Jardineiro &Jardineiro::operator=(const Jardineiro &outro) {
     if (this == &outro) return *this;
 
     limparInventario();
@@ -55,14 +53,14 @@ Jardineiro & Jardineiro::operator=(const Jardineiro &outro) {
 }
 
 void Jardineiro::limparInventario() {
-    for(Ferramenta* f : inventario)
+    for (Ferramenta *f: inventario)
         delete f;
     inventario.clear();
     ferramentaAtiva = nullptr;
 }
 
 bool Jardineiro::sair() {
-    if(entradasSaidasRestantes > 0) {
+    if (entradasSaidasRestantes > 0) {
         posLin = -1;
         posCol = -1;
         estaNoJardim = false;
@@ -73,7 +71,7 @@ bool Jardineiro::sair() {
 }
 
 bool Jardineiro::entrar(int l, int c) {
-    if(entradasSaidasRestantes > 0) {
+    if (entradasSaidasRestantes > 0) {
         posLin = l;
         posCol = c;
         estaNoJardim = true;
@@ -83,9 +81,9 @@ bool Jardineiro::entrar(int l, int c) {
     return false;
 }
 
-// se esgotar o numero de movimentos possiveis retorna false, senao true
+// se esgotar o número de movimentos possiveis retorna false, senao true
 bool Jardineiro::atualizaPos(int l, int c) {
-    if(podeMover()) {
+    if (podeMover()) {
         posLin = l;
         posCol = c;
         movimentosRestantes--;
@@ -95,7 +93,7 @@ bool Jardineiro::atualizaPos(int l, int c) {
 }
 
 bool Jardineiro::pegarFerramenta(int numSerie) {
-    for (Ferramenta* f : inventario) {
+    for (Ferramenta *f: inventario) { // NOLINT(*-use-anyofallof)
         if (f->getNumSerie() == numSerie) {
             ferramentaAtiva = f;
             return true;
@@ -113,7 +111,7 @@ bool Jardineiro::largarFerramenta() {
 }
 
 bool Jardineiro::comprarFerramenta(char tipo) {
-    Ferramenta* nova = nullptr;
+    Ferramenta *nova = nullptr;
 
     switch (tipo) {
         case 'g': // regador
@@ -141,23 +139,23 @@ bool Jardineiro::comprarFerramenta(char tipo) {
 }
 
 void Jardineiro::apanharFerramenta(Ferramenta *f) {
-    if(!f)
+    if (!f)
         return;
 
     inventario.push_back(f);
 
-    if(!ferramentaAtiva){
+    if (!ferramentaAtiva) {
         ferramentaAtiva = f;
     }
 }
 
 void Jardineiro::FerrDestruida() {
-    if(ferramentaAtiva == nullptr)
+    if (ferramentaAtiva == nullptr)
         return;
 
-    auto it = std::find(inventario.begin(), inventario.end(), ferramentaAtiva);
+    auto it = find(inventario.begin(), inventario.end(), ferramentaAtiva);
 
-    if(it != inventario.end()){
+    if (it != inventario.end()) {
         delete ferramentaAtiva;
         inventario.erase(it);
     }
@@ -171,21 +169,18 @@ void Jardineiro::reiniciaContadores() {
     entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 }
 
-std::vector<std::string> Jardineiro::listarFerramentas() const {
-    std::vector<std::string> out;
-
-    for (auto* f : inventario) {
-        std::string linha =
-                "[" + std::to_string(f->getNumSerie()) + "] " +
-                f->getTipo() + std::string(" - ") +
+vector<string> Jardineiro::listarFerramentas() const {
+    vector<string> out;
+    for (auto *f: inventario) {
+        string linha =
+                "[" + to_string(f->getNumSerie()) + "] " +
+                f->getTipo() + string(" - ") +
                 f->getDescricao();
-
         if (f == ferramentaAtiva)
-            linha += " (ativa)";
+            linha += " (na mão)";
 
         out.push_back(linha);
     }
-
     return out;
 }
 
