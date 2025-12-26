@@ -1,4 +1,5 @@
 #include "Comandos.h"
+#include "Jardim/Jardim.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -15,7 +16,7 @@ using namespace std;
 bool strParaInt(const string& s, int& out) {
     try {
         size_t pos;
-        out = stoi(s, &pos);
+        out = stoi(s, &pos); // este &pos guarda a posiçao do 1 caractere que n é um numero.
         return pos == s.length();
     } catch (...) {
         return false;
@@ -45,8 +46,8 @@ bool strParaCoords(const string& s, int& l, int& c) {
  * @brief Verifica se as coordenadas (l, c) estão dentro dos limites do jardim.
  * @return true se válidas, false caso contrário.
  */
-bool coordsValidas(int l, int c, const Retangulo& x) {
-    return (l >= 0 && l < x.dimLin && c >= 0 && c < x.dimCol);
+bool coordsValidas(int l, int c, const Jardim& x) {
+    return (l >= 0 && l < x.getDimLin() && c >= 0 && c < x.getDimCol());
 }
 
 /**
@@ -62,17 +63,17 @@ bool verificaLixo(istream& msg, const string& comando) {
     return false;
 }
 
-bool Executa_Comandos(istream& msg, Retangulo& x){
+bool Executa_Comandos(istream& msg, Jardim& x){
     string comando;
 
     if(!(msg >> comando)) return true; // se linha vazia ou EOF pa files
 
-    bool temJardim = (x.solo != nullptr); // false se null, true se existir jardim
+    bool temJardim = x.existe(); // false se null, true se existir jardim
     // só aceitamos 'jardim <L> <C>' ou 'executa <ficheiro>'
     if (comando == cmd::JARDIM) {
         if (temJardim) {
             cout << "Erro: já existe um jardim criado." << endl;
-            return true;;
+            return true;
         }
         string p1, p2;
         int L, C;
@@ -80,7 +81,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
             cout << "Erro: Sintaxe incorreta. Uso: jardim <L> <C>" << endl;
             return true;
         }
-        if (!strParaInt(p1, L) || !strParaInt(p2, C)) {
+        if (!strParaInt(p1, L) || !strParaInt(p2, C)) { // se conseguir converter de string para int, é pq user realmente digitou numero.
             cout << "Erro: Dimensoes devem ser numeros inteiros." << endl;
             return true;
         }
@@ -92,7 +93,7 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
             return true;
         }
         cout << "[META 1] Comando 'jardim " << L << " " << C << "' validado." << endl;
-        CriaJardim(L, C, x);
+        x.cria(L, C);
         return true;
     } else if (comando == cmd::EXECUTA) {
         string file;
@@ -126,9 +127,8 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "fim")) {
             return true;
         }
-        cout << "[META 1] Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
-        delete[] x.solo;
-        x.solo = nullptr;
+        cout << "Comando 'fim' validado. A terminar e a libertar recursos..." << endl;
+        x.destroi(); // -> deleta os blocos 1º dps o jardim todo
         return false;
     }
 
@@ -150,13 +150,14 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "avanca [n]")) {
             return true;
         }
-        cout << "[META 1] Comando 'avanca " << n << "' validado." << endl;
+        if(x.avancar(n))
+            cout << "Avançou " << n << "' instantes." << endl;
         return true;
-    } else if (comando == cmd::LPLANTAS) {
+    } else if (comando == cmd::LPLANTAS) { // todas plantas existentes no jardim
         if (verificaLixo(msg, "lplantas")) {
             return true;
         }
-        cout << "[META 1] Comando 'lplantas' validado." << endl;
+        cout << x.listaAllPlantas();
         return true;
     } else if (comando == cmd::LPLANTA) {
         string p1;
@@ -176,13 +177,13 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "lplanta <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'lplanta " << p1 << "' validado." << endl;
+        cout << x.lista1Planta(l,c);
         return true;
     } else if (comando == cmd::LAREA) {
         if (verificaLixo(msg, "larea")) {
             return true;
         }
-        cout << "[META 1] Comando 'larea' validado." << endl;
+        cout << x.listaArea();
         return true;
     } else if (comando == cmd::LSOLO) {
         string p1, p2;
@@ -210,13 +211,17 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "lsolo <l><c> [n]")) {
             return true;
         }
-        cout << "[META 1] Comando 'lsolo " << p1 << (temN ? " " + p2 : "") << "' validado." << endl;
+        if(!temN){
+            cout << x.listaAreaIndicada(l,c);
+            return true;
+        }
+        cout << x.listaAreaRaio(l,c,n);
         return true;
     } else if (comando == cmd::LFERR){
         if (verificaLixo(msg, "lferr")) {
             return true;
         }
-        cout << "[META 1] Comando 'lferr' validado." << endl;
+        x.listFerrJardineiro();
         return true;
     } else if (comando == cmd::COLHE) {
         string p1;
@@ -236,7 +241,11 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "colhe <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'colhe " << p1 << "' validado." << endl;
+        if(x.colher(l,c))
+            cout << "planta foi colhida" << endl;
+        else
+            cout << "N existe planta para colher ou esgotou limite máximo" << endl;
+        x.mostra();
         return true;
     } else if (comando == cmd::PLANTA) {
         string p1, p2;
@@ -260,13 +269,22 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "planta <l><c> <tipo>")) {
             return true;
         }
-        cout << "[META 1] Comando 'planta " << p1 << " " << p2 << "' validado." << endl;
+        char tipoPlanta = p2[0];
+        if(x.plantar(l,c,tipoPlanta))
+            cout << "Plantou planta do tipo: " + p2 << endl;
+        else
+            cout << "Já existe 1 planta nessa posicao ou limite máximo por turno atingido" << endl;
+        x.mostra();
         return true;
     } else if (comando == cmd::LARGA) {
         if (verificaLixo(msg, "larga")) {
             return true;
         }
-        cout << "[META 1] Comando 'larga' validado." << endl;
+        if(!x.largarFerrJardineiro()){
+            cout << "N tem ferramenta ativa, logo n consegue largar" << endl;
+            return true;
+        }
+        cout << "Largada ferramenta ativa" << endl;
         return true;
     } else if (comando == cmd::PEGA) {
         string p1;
@@ -282,7 +300,11 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "pega <n>")) {
             return true;
         }
-        cout << "[META 1] Comando 'pega " << n << "' validado." << endl;
+        if(!x.pegarFerrJardineiro(n)){
+            cout << "N foi possivel pegar na ferramenta" << endl;
+            return true;
+        }
+        cout << "Ferramenta " << n << " agora está ativa.\n";
         return true;
     } else if (comando == cmd::COMPRA) {
         string p1;
@@ -297,31 +319,21 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "compra <c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'compra " << p1 << "' validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::ESQ) {
-        if (verificaLixo(msg, "e")) {
+        char tipo = p1[0];
+        if(!x.comprarFerrJardineiro(tipo)){
+            cout << "N foi possivel comprar ferramenta do tipo: " << tipo << endl;
             return true;
         }
-        cout << "[META 1] Comando 'e' (esquerda) validado." << endl;
+        cout << "Jardineiro comprou ferramenta do tipo: " << tipo << endl;
         return true;
-    } else if (comando == cmd::mov::DIR) {
-        if (verificaLixo(msg, "d")) {
+    } else if (comando == cmd::mov::ESQ || comando == cmd::mov::DIR || comando == cmd::mov::CIMA || comando == cmd::mov::BAIXO ) {
+        if (verificaLixo(msg, comando)) {
             return true;
         }
-        cout << "[META 1] Comando 'd' (direita) validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::CIMA) {
-        if (verificaLixo(msg, "c")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'c' (cima) validado." << endl;
-        return true;
-    } else if (comando == cmd::mov::BAIXO) {
-        if (verificaLixo(msg, "b")) {
-            return true;
-        }
-        cout << "[META 1] Comando 'b' (baixo) validado." << endl;
+        if(!x.moveJardineiro(comando))
+            cout << "jardineiro não está no jardim ou limite de movimentação atingido" << endl;
+        x.mostra();
+        cout << "[META 1] Comando" + comando + "validado." << endl;
         return true;
     } else if (comando == cmd::ENTRA) {
         string p1;
@@ -341,13 +353,21 @@ bool Executa_Comandos(istream& msg, Retangulo& x){
         if (verificaLixo(msg, "entra <l><c>")) {
             return true;
         }
-        cout << "[META 1] Comando 'entra " << p1 << "' validado." << endl;
+        if(x.entraJardineiro(l,c)){
+           cout << "Jardineiro entrou no Jardim" << endl;
+           x.mostra();
+        }else
+            cout << "jardineiro já existe no jardim ou não pode voltar a entrar" << endl;
         return true;
     } else if (comando == cmd::SAI) {
         if (verificaLixo(msg, "sai")) {
             return true;
         }
-        cout << "[META 1] Comando 'sai' validado." << endl;
+        if(x.saiJardineiro())
+            cout << "Jardineiro saiu do jardim" << endl;
+        else
+            cout << "Jardineiro n pode sair (limite do turno atingido ou n está no jardim)" << endl;
+        x.mostra();
         return true;
     } else {
         cout << "Erro: Comando '" << comando << "' desconhecido." << endl;

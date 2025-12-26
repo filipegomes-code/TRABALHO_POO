@@ -10,7 +10,7 @@ using namespace std;
 
 int main(){
     srand(time(nullptr)); // gera semente
-    Retangulo mapa = {0,0,0, nullptr};
+    Jardim mapa;
 
     while (true) {
         string comando;
@@ -24,4 +24,3 @@ int main(){
 
     return 0;
 }
-

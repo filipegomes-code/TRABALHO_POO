@@ -1,28 +1,46 @@
 
 #ifndef TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
 #define TP_PROGRAMACAO_ORIENTADA_A_OBJETOS_JARDINEIRO_H
+
 #include <vector>
+#include "Settings.h"
 
-#include "Ferramentas/Ferramenta.h"
-
+class Ferramenta;
 
 class Jardineiro {
-public:
-    Jardineiro();
-    ~Jardineiro();
+private:
+    int posLin = -1, posCol=-1;
+    bool estaNoJardim = false;
+    std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
+    Ferramenta* ferramentaAtiva = nullptr; // ferramenta na mão do jardineiro
+
+    // Contadores de ações por instante
+    int movimentosRestantes = Settings::Jardineiro::max_movimentos;
+    int plantacoesRestantes = Settings::Jardineiro::max_plantacoes;
+    int colheitasRestantes = Settings::Jardineiro::max_colheitas;
+    int entradasSaidasRestantes = Settings::Jardineiro::max_entradas_saidas;
 
     void limparInventario();
 
-    void move(Jardim* j, char dir);
-    void sair();
-    void entrar(Jardim* j, int l, int c);
+public:
+    Jardineiro()=default;
+    ~Jardineiro();
 
-    void colherPlanta(Jardim* j, int l, int c);
-    void plantarPlanta(Jardim* j, int l, int c);
+    static char getSimbolo() {return '*';}
+    bool sair();
+    bool entrar(int l, int c);
+    bool podeMover() const {return movimentosRestantes;}
+    bool atualizaPos(int l, int c);
 
-    void pegarFerramenta(int numSerie);
-    void largarFerramenta();
-    void comprarFerramenta(char tipo);
+    bool pegarFerramenta(int numSerie);
+    bool largarFerramenta();
+    bool comprarFerramenta(char tipo);
+    void FerrDestruida();
+    bool podePlantar() const;
+    void registaPlantacao();
+    bool podeColher() const;
+    void registaColheita();
+
 
     // apanha a ferramenta de uma posição e adiciona ao inventário
     void apanharFerramenta(Ferramenta* f);
@@ -38,18 +56,7 @@ public:
     Ferramenta* getFerramentaAtiva() const { return ferramentaAtiva; }
 
     // lista as ferramentas no inventario (vetor) do jardineiro
-    void listarFerramentas() const;
-private:
-    int posLin, posCol;
-    bool estaNoJardim;
-    std::vector<Ferramenta*> inventario; // inventario de ferramentas do jardineiro
-    Ferramenta* ferramentaAtiva; // ferramenta na mão do jardineiro
-
-    // Contadores de ações por instante
-    int movimentosRestantes;
-    int plantacoesRestantes;
-    int colheitasRestantes;
-    int entradasSaidasRestantes;
+    std::vector<std::string> listarFerramentas() const;
 };
 
 
