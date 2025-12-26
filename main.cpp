@@ -14,17 +14,7 @@ int main() {
     cout << "========= BEM-VINDO AO SIMULADOR DE JARDIM =========" << endl;
     cout << "Comece por criar o jardim: jardim <linhas> <colunas>" << endl;
 
-    while (true) {
-        string comando;
-        cout << "\n> ";
-
-        if (!getline(cin, comando)) break; // erro ou EOF
-
-        if (comando.empty()) continue;
-
-        istringstream one(comando); // transforma essa linha e separa pelos espaços
-        if (!ProcessarComandos(one, mapa)) break; // 'fim' devolve false
-    }
+    ProcessarComandos(cin, mapa);
 
     return 0;
 }

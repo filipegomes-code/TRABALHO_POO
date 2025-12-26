@@ -499,7 +499,15 @@ std::unique_ptr<Comando> ComandoFactory::criar(const string &nome) {
 // PROCESSAR COMANDOS
 bool ProcessarComandos(istream &in, Jardim &jardim) {
     string linha;
-    while (getline(in, linha)) {
+
+    while (true) {
+        if(&in == &std::cin){
+            cout << "> ";
+        }
+
+        if (!getline(in, linha))
+            break;
+
         if (linha.empty())
             continue;
 
