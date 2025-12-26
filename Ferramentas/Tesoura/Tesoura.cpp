@@ -1,7 +1,3 @@
-//
-// Created by jpmre on 01/11/2025.
-//
-
 #include "Tesoura.h"
 #include "Jardim/Jardim.h"
 #include "Plantas/Planta.h"

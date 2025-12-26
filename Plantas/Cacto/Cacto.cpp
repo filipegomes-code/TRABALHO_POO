@@ -1,6 +1,4 @@
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
+
 #include "Cacto.h"
 #include "../../Settings.h"
 #include <algorithm>

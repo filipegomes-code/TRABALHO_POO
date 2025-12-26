@@ -1,6 +1,3 @@
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
 
 #include "Roseira.h"
 #include "../../Settings.h"

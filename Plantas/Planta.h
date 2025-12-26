@@ -1,6 +1,3 @@
-//
-// Created by Filipe Gomes on 29/10/2025.
-//
 
 #ifndef TRABALHO_PLANTA_H
 #define TRABALHO_PLANTA_H
