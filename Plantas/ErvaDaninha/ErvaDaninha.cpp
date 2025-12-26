@@ -1,5 +1,4 @@
 #include "ErvaDaninha.h"
-#include "../../Settings.h"
 
 ErvaDaninha::ErvaDaninha() : Planta(Settings::ErvaDaninha::inicial_nutrientes, Settings::ErvaDaninha::inicial_agua,
                                     "Feia") {

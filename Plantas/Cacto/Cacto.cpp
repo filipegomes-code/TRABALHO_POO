@@ -1,5 +1,4 @@
 #include "Cacto.h"
-#include "../../Settings.h"
 
 Cacto::Cacto() : Planta(0, 0, "neutra") {
 }

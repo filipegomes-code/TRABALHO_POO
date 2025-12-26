@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Jardim.h"
-#include "../Settings.h"
 #include <sstream>
 #include "Comandos/Comandos.h"
 #include "Ferramentas/Adubo/Adubo.h"

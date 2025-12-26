@@ -1,5 +1,4 @@
 #include "FerramentaZ.h"
-#include "Settings.h"
 #include "Jardim/Jardim.h"
 
 using namespace std;

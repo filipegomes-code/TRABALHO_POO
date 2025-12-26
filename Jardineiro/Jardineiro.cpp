@@ -111,7 +111,7 @@ bool Jardineiro::largarFerramenta() {
 }
 
 bool Jardineiro::comprarFerramenta(char tipo) {
-    Ferramenta *nova = nullptr;
+    Ferramenta *nova;
 
     switch (tipo) {
         case 'g': // regador

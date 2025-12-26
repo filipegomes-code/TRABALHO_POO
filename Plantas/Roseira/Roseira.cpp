@@ -1,5 +1,4 @@
 #include "Roseira.h"
-#include "../../Settings.h"
 
 Roseira::Roseira() : Planta(Settings::Roseira::inicial_agua, Settings::Roseira::inicial_nutrientes, "Bonita") {
 }

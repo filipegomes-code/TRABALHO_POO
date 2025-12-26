@@ -26,7 +26,6 @@ public:
     virtual bool passo(Jardim &j, int l, int c, Bloco &b) = 0;
 
 protected:
-    static int qtd_plantas;
     int nutrientes;
     int agua;
     string beleza;

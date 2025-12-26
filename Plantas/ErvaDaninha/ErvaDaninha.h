@@ -21,7 +21,6 @@ protected:
     bool CheckMorte() override;
 
 private:
-    int idade = 0; // instantes de vida (morre aos 60)
     int instantesDesdeMult = 0; // instantes desde a última multiplicação
     int instantesTotal = 0;
 

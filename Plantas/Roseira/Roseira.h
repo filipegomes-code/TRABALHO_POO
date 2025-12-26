@@ -25,7 +25,6 @@ protected:
 private:
     int aguaAbsVida = 0;
     int nutrAbsVida = 0;
-    bool All_PosVizOcupadas = false;
 
     [[nodiscard]] static bool vizinhosTodosComPlanta(const Jardim &j, int l, int c);
 
