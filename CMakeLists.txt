@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(.)
 
-add_executable(Trabalho
+add_executable(SimuladorJardim
         Jardim/jardim.cpp
         main.cpp
         Comandos/Comandos.cpp

@@ -9,11 +9,11 @@ using namespace std;
 
 // UTILITÁRIOS (Namespace anónimo para funções auxiliares locais)
 namespace {
-    // converte uma 'string' para inteiro - return true se for valido, false caso contrário
+    // converte uma 'string' para inteiro - return true se for válido, false caso contrário
     bool strParaInt(const string &s, int &out) {
         try {
             size_t pos;
-            out = stoi(s, &pos); // este &pos guarda a posição do 1 caractere que não é um número.
+            out = stoi(s, &pos); // este &pos guarda a posição do 1.º caractere que não é um número.
             return pos == s.length();
         } catch (...) {
             return false;
@@ -46,20 +46,20 @@ class CmdJardim : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (jardim.existe()) {
-            cout << "Erro: já existe um jardim." << endl;
+            cout << "[Erro] Já existe um jardim." << endl;
             return true;
         }
         if (args.size() != 2) {
-            cout << "Erro: Síntaxe incorreta. Uso: jardim <l> <c>" << endl;
+            cout << "[Erro] Uso: jardim <l> <c>" << endl;
             return true;
         }
         int l, c;
         if (!strParaInt(args[0], l) || !strParaInt(args[1], c)) {
-            cout << "Erro: Dimensões devem ser números inteiros." << endl;
+            cout << "[Erro] As dimensões devem ser números inteiros." << endl;
             return true;
         }
         if (l < 1 || l > 26 || c < 1 || c > 26) {
-            cout << "Erro: Linhas e colunas devem estar entre 1 e 26." << endl;
+            cout << "[Erro] Linhas e colunas devem estar entre 1 e 26." << endl;
             return true;
         }
 
@@ -74,13 +74,13 @@ class CmdAvanca : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (!jardim.existe()) {
-            cout << "Erro: Jardim não existe." << endl;
+            cout << "[Erro] Jardim não existe." << endl;
             return true;
         }
         int n = 1;
         if (!args.empty()) {
             if (args.size() > 1 || !strParaInt(args[0], n) || n <= 0) {
-                cout << "Erro: 'n' deve ser um inteiro positivo." << endl;
+                cout << "[Erro] 'n' deve ser um inteiro positivo." << endl;
                 return true;
             }
         }
@@ -96,7 +96,7 @@ class CmdFim : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: 'fim' não aceita argumentos." << endl;
+            cout << "[Erro] 'fim' não aceita argumentos." << endl;
             return true;
         }
         cout << "A terminar simulação..." << endl;
@@ -112,20 +112,20 @@ class CmdExecuta : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: executa <nome_ficheiro>" << endl;
+            cout << "[Erro] Uso: executa <nome_ficheiro>" << endl;
             return true;
         }
         ifstream f(args[0]);
         if (!f) {
-            cout << "Erro: Não abriu ficheiro '" << args[0] << "'" << endl;
+            cout << "[Erro] O ficheiro '" << args[0] << "' não foi aberto." << endl;
             return true;
         }
-        cout << "--- Início execução ficheiro: " << args[0] << " ---" << endl;
+        cout << "--- Início de execução do ficheiro: '" << args[0] << "' ---" << endl;
         // Chama o processador principal passando o ficheiro como stream - Recursivo
         if (!ProcessarComandos(f, jardim))
             return false; // se encontrar o comando 'fim' dentro do ficheiro, propaga o false
 
-        cout << "--- Fim execução ficheiro: " << args[0] << " ---" << endl;
+        cout << "--- Fim de execução do ficheiro: '" << args[0] << "' ---" << endl;
 
         return true;
     }
@@ -136,7 +136,7 @@ class CmdLPlantas : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: lplantas não aceita argumentos." << endl;
+            cout << "[Erro] 'lplantas' não aceita argumentos." << endl;
             return true;
         }
 
@@ -150,7 +150,7 @@ class CmdLArea : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: larea não aceita argumentos." << endl;
+            cout << "[Erro] 'larea' não aceita argumentos." << endl;
             return true;
         }
 
@@ -164,7 +164,7 @@ class CmdLFerr : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: lferr não aceita argumentos." << endl;
+            cout << "[Erro] 'lferr' não aceita argumentos." << endl;
             return true;
         }
 
@@ -178,12 +178,12 @@ class CmdLPlanta : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: lplanta <l><c>" << endl;
+            cout << "[Erro] Uso: lplanta <l><c>" << endl;
             return true;
         }
         int l, c;
         if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, jardim)) {
-            cout << "Erro: Coordenadas inválidas." << endl;
+            cout << "[Erro] Coordenadas inválidas." << endl;
             return true;
         }
 
@@ -197,18 +197,18 @@ class CmdLSolo : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.empty() || args.size() > 2) {
-            cout << "Erro: Uso: lsolo <l><c> [n]" << endl;
+            cout << "[Erro] Uso: lsolo <l><c> [n]" << endl;
             return true;
         }
         int l, c;
         if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
-            cout << "Erro: Coordenadas inválidas." << endl;
+            cout << "[Erro] Coordenadas inválidas." << endl;
             return true;
         }
         if (args.size() == 2) {
             int n;
             if (!strParaInt(args[1], n) || n < 0) {
-                cout << "Erro: raio deve ser um valor inteiro >= 0." << endl;
+                cout << "[Erro] O raio deve ser um inteiro positivo." << endl;
                 return true;
             }
             cout << j.listaAreaRaio(l, c, n);
@@ -225,18 +225,18 @@ class CmdColhe : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: colhe <l><c>" << endl;
+            cout << "[Erro] Uso: colhe <l><c>" << endl;
             return true;
         }
         int l, c;
         if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
-            cout << "Erro: Coordenadas inválidas." << endl;
+            cout << "[Erro] Coordenadas inválidas." << endl;
             return true;
         }
         if (j.colher(l, c)) {
             cout << "Planta colhida." << endl;
         } else {
-            cout << "Não foi possível colher (vazio ou limite atingido)." << endl;
+            cout << "Não foi possível colher." << endl;
         }
 
         j.mostra();
@@ -249,22 +249,22 @@ class CmdPlanta : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.size() != 2) {
-            cout << "Erro: Uso: planta <l><c> <tipo>" << endl;
+            cout << "[Erro] Uso: planta <l><c> <tipo>" << endl;
             return true;
         }
         int l, c;
         if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
-            cout << "Erro: Coordenadas inválidas." << endl;
+            cout << "[Erro] Coordenadas inválidas." << endl;
             return true;
         }
         const string &tipoStr = args[1];
         if (tipoStr.length() != 1) {
-            cout << "Erro: Tipo deve ser 1 caracter." << endl;
+            cout << "[Erro] Tipo deve ser 1 caractere." << endl;
             return true;
         }
         char tipo = static_cast<char>(tolower(tipoStr[0]));
         if (tipo != 'c' && tipo != 'r' && tipo != 'e' && tipo != 'x') {
-            cout << "Erro: Tipo inválido (c, r, e, x)." << endl;
+            cout << "[Erro] Tipo inválido (c, r, e, x)." << endl;
             return true;
         }
         if (j.plantar(l, c, tipo)) {
@@ -283,7 +283,7 @@ class CmdLarga : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: larga não aceita argumentos." << endl;
+            cout << "[Erro] 'larga' não aceita argumentos." << endl;
             return true;
         }
         if (j.largarFerrJardineiro()) {
@@ -300,12 +300,12 @@ class CmdPega : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: pega <id>" << endl;
+            cout << "[Erro] Uso: pega <id>" << endl;
             return true;
         }
         int id;
         if (!strParaInt(args[0], id) || id <= 0) {
-            cout << "Erro: ID deve ser inteiro positivo." << endl;
+            cout << "[Erro] ID deve ser um inteiro positivo." << endl;
             return true;
         }
         if (j.pegarFerrJardineiro(id)) {
@@ -322,17 +322,17 @@ class CmdCompra : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: compra <tipo>" << endl;
+            cout << "[Erro] Uso: compra <tipo>" << endl;
             return true;
         }
         const string &t = args[0];
         if (t.length() != 1) {
-            cout << "Erro: Tipo deve ser 1 caracter." << endl;
+            cout << "[Erro] Tipo deve ser 1 caractere." << endl;
             return true;
         }
         char tipo = static_cast<char>(tolower(t[0]));
         if (tipo != 'g' && tipo != 'a' && tipo != 't' && tipo != 'z') {
-            cout << "Erro: Tipo inválido (g, a, t, z)." << endl;
+            cout << "[Erro]: Tipo inválido (g, a, t, z)." << endl;
             return true;
         }
         if (j.comprarFerrJardineiro(tipo)) {
@@ -350,18 +350,18 @@ class CmdEntra : public Comando {
 public:
     bool executar(Jardim &j, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: entra <l><c>" << endl;
+            cout << "[Erro] Uso: entra <l><c>" << endl;
             return true;
         }
         int l, c;
         if (!strParaCoords(args[0], l, c) || !coordsValidas(l, c, j)) {
-            cout << "Erro: Coordenadas inválidas." << endl;
+            cout << "[Erro] Coordenadas inválidas." << endl;
             return true;
         }
         if (j.entraJardineiro(l, c)) {
             j.mostra();
         } else {
-            cout << "Não foi possível entrar (já dentro ou limite atingido)." << endl;
+            cout << "Não foi possível entrar." << endl;
         }
 
         return true;
@@ -372,14 +372,14 @@ class CmdSai : public Comando {
 public:
     bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: sai não aceita argumentos." << endl;
+            cout << "[Erro] 'sai' não aceita argumentos." << endl;
             return true;
         }
         if (jardim.saiJardineiro()) {
-            cout << "Jardineiro saiu do jardim." << endl;
+            cout << "Saiu do jardim." << endl;
             jardim.mostra();
         } else {
-            cout << "Não pode sair (não está no jardim ou limite atingido)." << endl;
+            cout << "Não pode sair." << endl;
         }
 
         return true;
@@ -394,13 +394,13 @@ public:
 
     bool executar(Jardim &j, const vector<string> &args) override {
         if (!args.empty()) {
-            cout << "Erro: movimento não aceita argumentos." << endl;
+            cout << "[Erro] movimento não aceita argumentos." << endl;
             return true;
         }
         if (j.moveJardineiro(direcao)) {
             j.mostra();
         } else {
-            cout << "Impossível mover o jardineiro." << endl;
+            cout << "Impossível mover." << endl;
         }
 
         return true;
@@ -415,13 +415,13 @@ class CmdGrava : public Comando {
 public:
     bool executar(Jardim &jardim, const vector<string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: grava <nome>" << endl;
+            cout << "[Erro] Uso: grava <nome>" << endl;
             return true;
         }
         if (Jardim::salvarJogo(args[0], jardim)) {
-            cout << "Jogo gravado com sucesso com o nome '" << args[0] << "'." << endl;
+            cout << "Jogo gravado com o nome '" << args[0] << "'." << endl;
         } else {
-            cout << "Erro ao gravar (Jardim não existe ou erro de memória)." << endl;
+            cout << "Erro ao gravar." << endl;
         }
 
         return true;
@@ -432,13 +432,13 @@ class CmdRecupera : public Comando {
 public:
     bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: recupera <nome>" << endl;
+            cout << "[Erro] Uso: recupera <nome>" << endl;
             return true;
         }
         if (Jardim::recuperarJogo(args[0], jardim)) {
             cout << "Jogo '" << args[0] << "' recuperado com sucesso." << endl;
         } else {
-            cout << "Erro: Save com o nome '" << args[0] << "' não encontrado." << endl;
+            cout << "Erro: Jogo com o nome '" << args[0] << "' não encontrado." << endl;
         }
 
         return true;
@@ -449,13 +449,13 @@ class CmdApaga : public Comando {
 public:
     bool executar(Jardim &jardim, const std::vector<std::string> &args) override {
         if (args.size() != 1) {
-            cout << "Erro: Uso: apaga <nome>" << endl;
+            cout << "[Erro] Uso: apaga <nome>" << endl;
             return true;
         }
         if (Jardim::apagarJogo(args[0])) {
-            cout << "Save '" << args[0] << "' apagado da memória." << endl;
+            cout << "Jogo '" << args[0] << "' apagado da memória." << endl;
         } else {
-            cout << "Erro: Save não encontrado." << endl;
+            cout << "Jogo '" << args[0] << "' não encontrado." << endl;
         }
 
         return true;
@@ -523,7 +523,7 @@ bool ProcessarComandos(istream &in, Jardim &jardim) {
         }
         if (!jardim.existe() && nomeCmd != cmd_keys::JARDIM && nomeCmd != cmd_keys::EXECUTA && nomeCmd !=
             cmd_keys::FIM) {
-            cout << "Erro: O primeiro comando deve ser 'jardim' ou 'executa'." << endl;
+            cout << "[Erro] O primeiro comando deve ser 'jardim' ou 'executa'." << endl;
             continue;
         }
 
@@ -532,7 +532,7 @@ bool ProcessarComandos(istream &in, Jardim &jardim) {
                 return false;
             }
         } else {
-            cout << "Erro: Comando desconhecido '" << nomeCmd << "'" << endl;
+            cout << "[Erro] Comando '" << nomeCmd << "' desconhecido." << endl;
         }
     }
 

@@ -239,7 +239,7 @@ string Jardim::lista1Planta(int l, int c) const {
     Planta *p = b.getPlanta();
 
     if (!b.getPlanta()) {
-        oss << "N tem planta nessa posicao\n";
+        oss << "Não há planta na posição.\n";
         return oss.str();
     }
 
@@ -247,12 +247,12 @@ string Jardim::lista1Planta(int l, int c) const {
     char lc_col = static_cast<char>('a' + c);
 
     oss << "posição " << lc_lin << lc_col
-            << " - tipo='" << p->Simbolo() << "'"
-            << " | planta: agua=" << p->getAgua()
-            << ", nutr=" << p->getNutrientes()
-            << ", beleza=\"" << p->getBeleza() << "\""
-            << " | solo: agua=" << b.getAgua()
-            << ", nutr=" << b.getNutri()
+            << " - tipo = '" << p->Simbolo() << "'"
+            << " | planta: água = " << p->getAgua()
+            << ", nutrientes = " << p->getNutrientes()
+            << ", beleza = \"" << p->getBeleza() << "\""
+            << " | solo: água = " << b.getAgua()
+            << ", nutrientes = " << b.getNutri()
             << "\n";
 
     return oss.str();
@@ -440,7 +440,6 @@ void Jardim::plantaPosRandom() const {
         int pos = rand() % tamJardim; // NOLINT(cert-msc50-cpp)
 
         if (solo[pos].getPlanta() == nullptr) {
-            // no futuro podes randomizar entre Roseira/Cacto/ErvaDaninha/etc.
             switch (rand() % 4 + 1) { // NOLINT(cert-msc50-cpp)
                 case 1: solo[pos].setPlanta(new Roseira());
                     break;
